@@ -37,7 +37,7 @@
       <cell>
         <wxc-cell label="用户协议"
                   :has-arrow="true"
-                  @wxcCellClicked="(e)=>{self.$router.openBrowser('') }"
+                  @wxcCellClicked="agreementClicked"
                   :has-top-border="false"
                   :has-bottom-border="true">
         </wxc-cell>
@@ -135,6 +135,9 @@ export default {
       })
     },
     setMineData () {
+      // this.$storage.delete('account').then(resData => {
+      //   console.log("删除成功") 
+      // })
       this.$storage.get('account').then(resData => {
         this.nick = resData.nick
         this.roleName = resData.role_name
@@ -143,7 +146,16 @@ export default {
         this.role = resData.role
         this.reward = resData.reward
       })
+    },
+
+    agreementClicked () {
+      this.$router.toWebView({
+        url: 'https://maimaituiguang.github.io/mm-web/agreement.html',
+        title: '协议',
+        navShow: true
+      })
     }
+
   }
 }
 </script>
