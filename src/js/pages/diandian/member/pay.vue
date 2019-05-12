@@ -2,11 +2,11 @@
   <div style="background-color: #fff;">
     <list v-if="isShowPage" :show-scrollbar="false" :showRefresh="false">
       <cell class="container">
-        <text style="color:red;">请在支付宝中打开该页面进行支付</text>
+        <text style="color:red;">{{headerTip}}</text>
         <image ref="imageQR" class="qrcode" :src="qrcode" @load="onImageLoad"></image>
         <wxc-button 
           :btnStyle="{width: '600px', backgroundColor:(this.payType == 'weixin'?'#33A449':'#2E7DCE'), marginTop:'50px'}" 
-          :text="'复制链接🔗跳转支付'" 
+          :text="'复制支付链接🔗跳转支付'" 
           @wxcButtonClicked="payClicked" />
       </cell>
     </list>
@@ -37,6 +37,7 @@
         this.price = resData.price
         this.qrcode = 'https://maimaituiguang.github.io/mm-web/images/'+this.payType+'_'+this.price+'.png'
         this.$notice.loading.show('')
+        this.headerTip = '请在'+(this.payType == 'weixin' ? '微信' : '支付宝')+'中打开该页面进行支付'
       })
 
       // setTimeout(() => {
