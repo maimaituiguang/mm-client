@@ -1,6 +1,7 @@
 <template>
-  <div class="container">
-    <text style="font-size: 45px;">手机号注册</text>
+<div>
+  <div class="container" :style="containerStyle">
+    <text style="font-size: 45px;">注册/登陆</text>
     <image class="user-avator" src="https://pic1.zhimg.com/da8e974dc.jpg"></image>
     <div style="align-items: flex-end; width: 750px;">
       <wxc-cell class="cell" :has-bottom-border="true">
@@ -17,11 +18,12 @@
         <input class="cell-title" slot="title" type="number" placeholder="请输入验证码" @input="codeInput" />
       </wxc-cell>
     </div>
-    <wxc-button :btnStyle="btnStyle" text="注册" :disabled="(this.nick!='' && this.phone!='' && this.code!='') == false" @wxcButtonClicked="submit"></wxc-button>
+    <wxc-button :btnStyle="btnStyle" text="提交" :disabled="(this.nick!='' && this.phone!='' && this.code!='') == false" @wxcButtonClicked="submit"></wxc-button>
   </div>
+</div>  
 </template>
 <script>
-  import { WxcCell, wxcButton } from 'weex-ui'
+  import { WxcCell, wxcButton, Utils } from 'weex-ui'
   const sms = weex.requireModule('smsCode')
 
   export default {
@@ -46,12 +48,20 @@
     },
     created () {
       this.$navigator.setNavigationInfo({ navShow: true })
-      // this.$navigator.setLeftItem({ 
-      //   text: '取消', 
-      //   textColor: '#4BB93B' }, 
-      // () => {
-      //   this.$router.back({type:'PRESENT'})
-      // })
+      this.$navigator.setLeftItem({
+        image: 'https://maimaituiguang.github.io/mm-web/images/empty.jpg'
+      })
+
+      this.containerStyle = {width: '750px', height:'2000px'}
+
+      if (Utils.env.isAndroid()) {
+        sms.initSMS()
+      }
+    },
+    deforeDestroy () {
+      if (Utils.env.isAndroid()) {
+        sms.unregisterEventHandler()
+      }
     },
     methods: {
       submit () {
@@ -138,7 +148,7 @@
 <style scoped>
   .container {
     align-items: center;
-    background-color: #fff;
+    background-color: #ffffff;
   }
   .user-avator {
     width: 130px;

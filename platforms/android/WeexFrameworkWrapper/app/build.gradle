@@ -96,5 +96,6 @@ dependencies {
     //基础库
     compile project(':nexus')
     compile project(':wxframework')
+    compile project(':smsmodule')
 
 }

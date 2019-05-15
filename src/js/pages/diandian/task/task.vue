@@ -47,12 +47,12 @@ export default {
     }
   },
   created () {
-    this.account = this.$storage.getSync('account')
-    this.queryTask()
+    this.onrefresh()
   },
   methods: {
     onrefresh () {
       this.queryTask()
+      this.account = this.$storage.getSync('account')
     },
     tapedAllTaskItem () {
       this.$router.open({ name: 'task.list' })

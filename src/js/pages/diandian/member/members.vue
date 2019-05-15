@@ -10,7 +10,7 @@
               <text style="color: white; font-size: 30px; font-weight: bold;">{{this.data.nick}}</text>
               <div style="flex-direction:row; align-items: center; margin-top: 5px;">
                 <text class="sub-text">{{this.data.role_name}} ∙ 佣金 </text>
-                <text style="font-size: 35px; color: #FE802B">{{this.data.reward}}</text>
+                <text style="font-size: 35px; color: #FE802B">{{this.data.role == 0 ? 0 : this.data.reward}}</text>
                 <text class="sub-text"> 元/份</text>
               </div>
             </div>
@@ -152,14 +152,15 @@ export default {
           url = 'https://qr.alipay.com/fkx02259uomcfaucjm9w70a'
         }
 
-        this.$notice.alert({
-          title: '提示：支付时请务必备注上您的手机号',
-          message: '',
-          okTitle: '确认',
-          callback() {
-            self.$router.openBrowser(url)    
-          }
-        })
+        self.$router.openBrowser(url)
+        // this.$notice.alert({
+        //   title: '提示：支付时请务必备注上您的手机号',
+        //   message: '',
+        //   okTitle: '确认',
+        //   callback() {
+            
+        //   }
+        // })
       }
       
     }

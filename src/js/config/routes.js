@@ -26,7 +26,7 @@ export default {
         url: '/pages/diandian/account/login.js'
     },
     'account.register': {
-        title: '',
+        title: ' ',
         url: '/pages/diandian/account/register.js'
     },
     'mine.viewTask': {

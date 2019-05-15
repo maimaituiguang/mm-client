@@ -17,7 +17,7 @@
                   :has-bottom-border="true">
           <div slot="title" style="">
             <input ref="appNumber" class="number input" placeholder="输入注册账号" @input="numberOnInput" type="text" />
-            <input ref="appPassword" class="password input" placeholder="输入注册密码" @input="pwdOnInput" type="text" />
+            <input ref="appPassword" class="password input" placeholder="输入账号昵称" @input="pwdOnInput" type="text" />
           </div>
         </wxc-cell> 
       </cell>
@@ -74,13 +74,18 @@ export default {
       data: {},
       endTime: 0,
       number:'',
-      password: ''
+      password: '',
+      role: 0
     }
   },
   created () {
     this.$router.getParams().then(resData => {
       this.data = resData
       this.endTime = Tools.timeFormat(resData.end_time)
+    })
+
+    this.$storage.get('account').then(resData => {
+      this.role = resData.role
     })
   },
   methods: {
@@ -98,6 +103,18 @@ export default {
       })
     },
     wxcButtonClicked () {
+      if (this.role == 0) {
+        const self = this
+        this.$notice.alert({
+          title: '请先开通会员',
+          message: '开通会员，每日任务不断',
+          okTitle: '确认',
+          callback() {
+            self.$router.open({name: 'member.members'})
+          }
+        })
+        return
+      }
       if (this.number == '' || this.password == '') {
         this.$notice.toast({ message: '任务未完成'})
         return

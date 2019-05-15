@@ -6,7 +6,7 @@
         <image ref="imageQR" class="qrcode" :src="qrcode" @load="onImageLoad"></image>
         <wxc-button 
           :btnStyle="{width: '600px', backgroundColor:(this.payType == 'weixin'?'#33A449':'#2E7DCE'), marginTop:'50px'}" 
-          :text="'复制支付链接🔗跳转支付'" 
+          :text="'保存二维码🔗跳转到'+(this.payType == 'weixin' ? '微信' : '支付宝')" 
           @wxcButtonClicked="payClicked" />
       </cell>
     </list>
@@ -37,7 +37,7 @@
         this.price = resData.price
         this.qrcode = 'https://maimaituiguang.github.io/mm-web/images/'+this.payType+'_'+this.price+'.png'
         this.$notice.loading.show('')
-        this.headerTip = '请在'+(this.payType == 'weixin' ? '微信' : '支付宝')+'中打开该页面进行支付'
+        this.headerTip = '请保存支付二维码，在'+(this.payType == 'weixin' ? '微信' : '支付宝')+'中打开，长按识别'
       })
 
       // setTimeout(() => {
@@ -59,9 +59,8 @@
         this.$tools.copyString(url)
 
         const self = this
-        const app = this.payType == 'weixin' ? '微信' : '支付宝'
         this.$notice.alert({
-          title: '支付链接已复制，请在'+app+'中粘贴链接并打开页面',
+          title: '提示：支付时请务必备注上您的手机号',
           message: '',
           okTitle: '确认',
           callback() {

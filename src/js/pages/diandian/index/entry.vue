@@ -1,20 +1,28 @@
 <template>
-  <wxc-tab-bar :tab-titles="tabTitles"
+<div>
+  <div v-if="!showTab" class="login" :style="contentStyle">
+    <wxc-button :btnStyle="{width: '400px', backgroundColor:'#33A449'}" 
+                text="注册/登录" 
+                @wxcButtonClicked="loginClicked" />
+  </div>
+  
+  <wxc-tab-bar v-if="showTab" :tab-titles="tabTitles"
                :tab-styles="tabStyles"
                :duration="duration"
                title-type="iconFont"
                @wxcTabBarCurrentTabSelected="wxcTabBarCurrentTabSelected">
-    <Task class="page-container" v-if="showTab" :style="contentStyle" />
-    <Apps class="page-container" v-if="showTab" :style="contentStyle" />
-    <Wallet class="page-container" v-if="showTab" :style="contentStyle" />
-    <Mine class="page-container" v-if="showTab" :style="contentStyle" />
+    <Task class="page-container" :style="contentStyle" />
+    <Apps class="page-container" :style="contentStyle" />
+    <Wallet class="page-container" :style="contentStyle" />
+    <Mine class="page-container" :style="contentStyle" />
   </wxc-tab-bar>
+</div>
 </template>
 
 <style scoped>
 </style>
 <script>
-import {WxcTabBar, Utils} from 'weex-ui'
+import {WxcTabBar, Utils, WxcButton} from 'weex-ui'
 import Config from './config'
 import Task from '../task/task'
 import Apps from '../app/apps'
@@ -22,7 +30,7 @@ import Wallet from '../wallet/wallet'
 import Mine from '../mine/mine'
 
 export default {
-  components: {WxcTabBar, Task, Apps, Wallet, Mine},
+  components: {WxcTabBar, Task, Apps, Wallet, Mine, WxcButton},
   data: () => ({
     tabTitles: Config.tabIconFontTitles,
     tabStyles: Config.tabIconFontStyles,
@@ -51,10 +59,17 @@ export default {
     }
   },
   methods: {
-    wxcTabBarCurrentTabSelected (e) {}
+    wxcTabBarCurrentTabSelected (e) {},
+    loginClicked () {
+      this.$router.open({ name:'account.register', type:'PRESENT' })
+    }
   }
 }
 </script>
 
 <style scoped>
+  .login {
+    justify-content:center;
+    align-items: center;
+  }
 </style>

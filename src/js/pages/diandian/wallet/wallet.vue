@@ -14,7 +14,8 @@
               <div class="money-container">
                 <div class="money-left">
                   <text class="money-left-title">可提现</text>
-                  <text class="money-left-number">{{unTake}}</text>
+                  <text style="font-size:20px;color:#666;">(超 20 元可提现)</text>
+                  <text class="money-left-number">{{canTake}}</text>
                 </div>
                 <text class="money-line">.</text>
                 <div class="money-right">
@@ -22,12 +23,12 @@
                   <text class="money-right-number">{{totals}}</text>
                 </div>
               </div>
-              <div class="reward-button" @click="() => { this.$router.open({ name: 'wallet.reward', type: 'PRESENT', params: {unTake: this.unTake} }) }">
+              <div class="reward-button" @click="() => { this.$router.open({ name: 'wallet.reward', type: 'PRESENT', params: {unTake: this.canTake} }) }">
                 <text class="reward-button-text">提现</text>
               </div>
             </div>
           </div>
-          <div class="user-guide" @click="(e)=>{this.$router.open({name: 'mine.members'})}">
+          <div class="user-guide" @click="(e)=>{this.$router.open({name: 'member.members'})}">
             <text class="user-guide-text-left">完任务，赚佣金</text>
             <text class="user-guide-text-right">开通会员 &#xe621;</text>
           </div>
@@ -46,6 +47,7 @@ export default {
     unTake: '0.00',
     hasTake: '0.00',
     totals: '0.00',
+    canTake: '0.00',
     userName: '注册用户'
   }),
   created () {
@@ -77,6 +79,7 @@ export default {
           this.unTake = Tools.toDecimal2(data.un_take)
           this.hasTake = Tools.toDecimal2(data.has_take)
           this.totals = Tools.toDecimal2(data.un_take + data.has_take)
+          this.canTake = this.unTake - 20 > 0 ? this.canTake : '0.00'
         }
         this.$refs['list'].refreshEnd()
       }, error => {
@@ -105,7 +108,7 @@ export default {
     background-color: #fff;
     border-radius: 6px;
     padding-top: 70px;
-    padding-bottom: 70px;
+    padding-bottom: 30px;
   }
   .user-money {
     font-size: 28px;
@@ -140,7 +143,6 @@ export default {
     margin-right: 100px;
     margin-top: 14px;
     margin-bottom: 14px;
-    display: block;
   }
   .reward-button {
     height: 70px;

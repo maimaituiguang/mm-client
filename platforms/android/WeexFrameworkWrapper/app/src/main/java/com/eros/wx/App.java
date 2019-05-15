@@ -15,10 +15,5 @@ public class App extends BMWXApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-
-
-
-
     }
-
 }
