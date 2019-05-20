@@ -5,7 +5,7 @@
         <cell> 
           <div class="wallet-container">
             <div style="align-items: center;">
-              <image class="user-avator" src="https://pic1.zhimg.com/da8e974dc.jpg"></image>
+              <image class="user-avator" :src="avator"></image>
               <text class="user-name">{{userName}}</text>
             </div>
             <div class="wallet-detail">
@@ -48,7 +48,8 @@ export default {
     hasTake: '0.00',
     totals: '0.00',
     canTake: '0.00',
-    userName: '注册用户'
+    userName: '注册用户',
+    avator: 'https://pic1.zhimg.com/da8e974dc.jpg'
   }),
   created () {
     this.queryTask()
@@ -67,6 +68,9 @@ export default {
       this.$router.open({ name:'wallet.history' })
     },
     queryTask () {
+      this.$storage.get('avator').then(resData => {
+        this.avator = resData
+      })
       this.$fetch({
           method: 'GET',
           name: 'wallet.money',

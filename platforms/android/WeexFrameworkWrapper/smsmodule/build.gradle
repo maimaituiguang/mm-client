@@ -25,8 +25,8 @@ android {
     }
 
     MobSDK {
-        appKey "d580ad56b4b5"
-        appSecret "7fcae59a62342e7e2759e9e397c82bdd"
+        appKey "2b018ec23b834"
+        appSecret "684b9b3305fa7cd9056f0a498d213798"
 
         SMSSDK {
             //默认使用GUI，若不使用GUI，通过以下开关关闭

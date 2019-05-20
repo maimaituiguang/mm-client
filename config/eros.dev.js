@@ -28,7 +28,9 @@ module.exports = {
         // settings
         'js/pages/diandian/mine/settings.vue',
         // pay
-        'js/pages/diandian/member/pay.vue'
+        'js/pages/diandian/member/pay.vue',
+        // card
+        'js/pages/diandian/mine/card.vue'
 
 
 

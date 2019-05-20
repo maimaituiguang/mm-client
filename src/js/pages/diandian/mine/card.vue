@@ -2,22 +2,30 @@
   <div>
     <list ref="list" :show-scrollbar="false" :showRefresh="false" @refresh="onrefresh">
       <cell>
-        <wxc-cell style="margin-top:20px" title="头像"
+        <wxc-cell title="银行卡号"
                   :has-arrow="true"
-                  @wxcCellClicked="avatorClicked"
                   :has-top-border="true"
                   :has-bottom-border="true">
-          <image class="user-avator" :src="avator"></image>
+          <input class="input" placeholder="请输入银行卡号" :value="number" @input="(e)=>{this.number=e.value}" return-key-type="done"></input>
         </wxc-cell>
       </cell>
       <cell>
-        <wxc-cell title="昵称"
+        <wxc-cell title="开户行"
                   :has-arrow="true"
                   :has-top-border="false"
                   :has-bottom-border="true">
-          <input class="input" :value="nick" @input="(e)=>{this.nick=e.value}" return-key-type="done" ></input>
+          <input class="input" placeholder="请输入开户行" :value="bank" @input="(e)=>{this.bank=e.value}" return-key-type="done" ></input>
         </wxc-cell>
       </cell>
+      <cell>
+        <wxc-cell title="姓名"
+                  :has-arrow="true"
+                  :has-top-border="false"
+                  :has-bottom-border="true">
+          <input class="input" placeholder="请输入姓名" :value="userName" @input="(e)=>{this.userName=e.value}" return-key-type="done" ></input>
+        </wxc-cell>
+      </cell>
+      
       <cell style="width: 750px;">
         <wxc-button :btnStyle="{backgroundColor:'#FE802B', width:'670px', margin:'40px'}" text="保存" @wxcButtonClicked="save"></wxc-button>
       </cell>
@@ -33,35 +41,24 @@
   export default {
     components: {WxcButton, Utils, WxcCell, WxcLoading},
     data: () => ({
-      avator: 'https://pic1.zhimg.com/da8e974dc.jpg',
-      nick: '',
-      alipay: '',
+      card: '',
+      userName: '',
+      bank: '',
       isLoading: false
     }),
     created () {
-      this.$storage.get('avator').then(resData => {
-        this.avator = resData
-      })
       this.$router.getParams().then(resData => {
-        this.nick = resData.nick
-        this.alipay = resData.alipay
+        this.number = resData.number
+        this.userName = resData.userName
+        this.bank = resData.bank
       })
     },
     methods: {
-      avatorClicked () {
-        this.$image.pick({
-          imageWidth: '400',                  
-          allowCrop: true                  
-        })
-        .then(resData => {
-          this.avator = resData[0]
-          this.$storage.set('avator', resData[0]).then(resData => {})
-
-        }, error => {
-          this.$notice.toast({message: '图片选取失败'})
-        })
-      },
       save () {
+        if (this.number.length == 0 || this.userName.length == 0 || this.bank == 0) {
+          return
+        }
+        const self = this
         this.isLoading = true
         this.$fetch({
           method: 'POST',
@@ -70,8 +67,7 @@
             zc_0: Tools.zc_0()
           },
           data: {
-            nick: this.nick,
-            alipay: this.alipay
+            card: {'number': self.number, 'userName': self.userName, 'bank': self.bank}
           }
         }).then(resData => {
           this.isLoading = false

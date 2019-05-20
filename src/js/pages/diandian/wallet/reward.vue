@@ -4,9 +4,9 @@
     <scroller alwaysScrollableVertical="true">
       <div class="page-container">
         <div class="reward-header">
-          <text style="font-size: 28px; margin-left: 60px;">到支付宝</text>
+          <text style="font-size: 28px; margin-left: 60px;">到银行卡</text>
           <div class="reward-ali-info">
-            <text style="font-size: 28px; font-weight: bold;">{{alipay}}</text>
+            <text style="font-size: 28px; font-weight: bold;">{{card.hasOwnProperty('number') ? card.number : '请设置银行卡号'}}</text>
             <text style="font-size: 26px; color: #777; margin-top: 20px;">1-3 个工作日到账, 不超过 4 天</text>
           </div>
         </div>
@@ -21,7 +21,7 @@
             <text style="font-size: 26px; color: #777; padding-top: 20px; padding-bottom: 20px;">可提现金额: {{canTake}}</text>
             <text style="font-size: 26px; color: #3268C7; padding-top: 20px; padding-bottom: 20px;" @click="allReward">，全部提现</text>
           </div>
-          <wxc-button class="reward-button" :btnStyle="btnStyle"  :disabled="!(inputValue > 0 && inputValue <= parseFloat(canTake) && alipay != '请设置支付宝账号')" text="提现" @wxcButtonClicked="reward"></wxc-button>
+          <wxc-button class="reward-button" :btnStyle="btnStyle"  :disabled="!(inputValue > 0 && inputValue <= parseFloat(canTake) && card.hasOwnProperty('number'))" text="提现" @wxcButtonClicked="reward"></wxc-button>
         </div>
       </div>
     </scroller>
@@ -42,7 +42,7 @@
         marginBottom: 50+'px'
       },
       buttonEnable: false,
-      alipay: '请设置支付宝账号',
+      card: {},
       canTake: '0.00',
       inputValue:''
     }),
@@ -63,9 +63,9 @@
       })
 
       this.$storage.get('account').then(resData => {
-        if (resData.alipay) {
-          this.alipay = resData.alipay
-        }
+        if (resData.hasOwnProperty("card")) {
+          this.card = resData.card
+        } 
       })
     },
     methods: {

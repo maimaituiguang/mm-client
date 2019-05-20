@@ -44,6 +44,10 @@ export default {
     'member.pay': {
         title: '支付',
         url: '/pages/diandian/member/pay.js'
+    },
+    'mine.card': {
+        title: '银行卡',
+        url: '/pages/diandian/mine/card.js'
     }
 
 

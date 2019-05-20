@@ -15,14 +15,13 @@
             </div>  
           </div>
         </wxc-cell>
-        
       </cell>
       <cell class="cell-temp-line"></cell>
       <cell>
         <wxc-cell label="收益明细"
                   :has-arrow="true"
                   @wxcCellClicked="(e) => {this.$router.open({ name:'wallet.history' })}"
-                  :has-top-border="false"
+                  :has-top-border="true"
                   :has-bottom-border="true">
         </wxc-cell>
       </cell>
@@ -53,27 +52,27 @@
       </cell>
       <cell class="cell-temp-line"></cell>
       <cell>
-        <wxc-cell label="手机号码"
-                  :has-arrow="false"
+        <wxc-cell label="银行卡"
+                  :has-arrow="true"
+                  @wxcCellClicked="(e)=>{this.$router.open({name:'mine.card', params: card})}"
                   :has-top-border="true"
-                  :has-bottom-border="false">
-          <text slot="title">{{phone}}</text>
+                  :has-bottom-border="true">
+          <text slot="title">{{ card.hasOwnProperty('number') ? card.number : '点击设置银行卡号' }}</text>
         </wxc-cell>
       </cell>
       <cell>
-        <wxc-cell label="支付宝账号"
+        <wxc-cell label="手机号码"
                   :has-arrow="false"
-                  @wxcCellClicked="accountListClicked"
-                  :has-top-border="true"
+                  :has-top-border="false"
                   :has-bottom-border="true">
-          <text slot="title">{{ alipay != '' ? alipay : '点击添加支付宝账号' }}</text>
+          <text slot="title">{{phone}}</text>
         </wxc-cell>
       </cell>
       <cell class="cell-temp-line"></cell>
       <cell>
         <wxc-cell label="客服 QQ"
                   :has-arrow="false"
-                  :has-top-border="true"
+                  :has-top-border="false"
                   :has-bottom-border="true">
           <text slot="title">2582985333</text>
         </wxc-cell>
@@ -94,7 +93,7 @@ export default {
       nick: '',
       roleName: '',
       phone: '',
-      alipay: '',
+      card: {},
       role: 0,
       reward: 0,
       avator: 'https://pic1.zhimg.com/da8e974dc.jpg'
@@ -102,14 +101,19 @@ export default {
   },
   created () {
     this.setMineData()
-    this.setAvator()
     this.$event.on('refreshAccount', params => {
       this.onrefresh()
-      this.setAvator()
     })
   },
   methods: {
+    setAvator () {
+      const a = this.$storage.getSync('avator')
+      if (a.length > 0) {
+        this.avator = a
+      }
+    },
     onrefresh () {
+      this.setAvator()
       this.$fetch({
         method: 'GET',
         name: 'mine.account',
@@ -129,22 +133,20 @@ export default {
         this.$notice.toast({ message: '数据请求失败' })
       })
     },
-    setAvator () {
-      this.$storage.get('avator').then(resData => {
-        this.avator = resData
-      })
-    },
     setMineData () {
       // this.$storage.delete('account').then(resData => {
       //   console.log("删除成功") 
       // })
+      this.setAvator()
       this.$storage.get('account').then(resData => {
         this.nick = resData.nick
         this.roleName = resData.role_name
         this.phone = resData.phone
-        this.alipay = resData.alipay
         this.role = resData.role
         this.reward = resData.reward
+        if (resData.hasOwnProperty("card")) {
+          this.card = resData.card
+        } 
       })
     },
 
