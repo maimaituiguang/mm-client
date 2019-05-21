@@ -1,12 +1,16 @@
 <template>
 <div>
   <div class="container" :style="containerStyle">
-    <text style="font-size: 45px;">注册/登陆</text>
-    <image class="user-avator" src="https://pic1.zhimg.com/da8e974dc.jpg"></image>
+    <text style="font-size: 45px;">短信验证{{type ? "登录" : "注册"}}</text>
+    <div class="xieyi">
+      <text style="color: #999; font-size: 22px;">登录注册表示同意 </text>
+      <text style="color: #4BB93B; font-size: 22px;" @click="agreementClicked">麦麦推广协议</text>
+    </div>
+    <!-- <image v-if="!type" class="user-avator" src="https://pic1.zhimg.com/da8e974dc.jpg"></image> -->
     <div style="align-items: flex-end; width: 750px;">
-      <wxc-cell class="cell" :has-bottom-border="true">
+      <wxc-cell v-if="!type" class="cell" :has-bottom-border="true">
         <text class="cell-label" slot="label">昵称</text>
-        <input class="cell-title" slot="title" placeholder="例如：七麦" @input="nickInput" />
+        <input class="cell-title" slot="title" placeholder="例如：陈峰" @input="nickInput" />
       </wxc-cell>
       <wxc-cell class="cell" :has-bottom-border="true">
         <text class="cell-label" slot="label">手机号</text>
@@ -18,7 +22,14 @@
         <input class="cell-title" slot="title" type="number" placeholder="请输入验证码" @input="codeInput" />
       </wxc-cell>
     </div>
-    <wxc-button :btnStyle="btnStyle" text="提交" :disabled="(this.nick!='' && this.phone!='' && this.code!='') == false" @wxcButtonClicked="submit"></wxc-button>
+    <wxc-button :btnStyle="btnStyle" 
+                :text="type?'登录':'注册'" 
+                :disabled="((this.nick!='' || this.type==1 ) && this.phone!='' && this.code!='') == false" 
+                @wxcButtonClicked="submit">
+                </wxc-button>
+    <div style="align-items: flex-start; width: 750px;" @click="(e)=>{this.type = !this.type}">
+      <text style="font-size: 30px; color: #4BB93B; padding: 40px; margin-left: 20px;">切换到{{!type?"登录":"注册"}}</text>
+    </div>
   </div>
 </div>  
 </template>
@@ -32,11 +43,11 @@
       return {
         btnStyle: {
           backgroundColor:'#4BB93B', 
-          width: 600+'px', 
-          height: 70+'px',
-          fontSize: 32+'px',
-          marginTop: 40+'px'
+          width: 630+'px', 
+          height: 80+'px',
+          fontSize: 32+'px'
         },
+        type: 0,
         nick: '',
         phone: '',
         code: '',
@@ -47,12 +58,14 @@
       }
     },
     created () {
+      const pageHeight = Utils.env.getPageHeight()
+
       this.$navigator.setNavigationInfo({ navShow: true })
       this.$navigator.setLeftItem({
         image: 'https://maimaituiguang.github.io/mm-web/images/empty.jpg'
       })
 
-      this.containerStyle = {width: '750px', height:'2000px'}
+      this.containerStyle = {width: '750px', height: pageHeight + 'px'}
 
       if (Utils.env.isAndroid()) {
         sms.initSMS()
@@ -74,14 +87,20 @@
             return
           }
 
+          const register = {
+            nick: self.nick,
+            phone: self.phone,
+            code: self.code
+          }
+          const login = {
+            phone: self.phone,
+            code: self.code
+          }
+
           self.$fetch({
             method: 'POST',
             name: 'account.register',
-            data: {
-              nick: self.nick,
-              phone: self.phone,
-              code: self.code
-            }
+            data: this.type ? login : register
           }).then(resData => {
             self.$notice.loading.hide()
             if (resData.success == '1') {
@@ -99,7 +118,6 @@
           }, error => {
             self.$notice.toast({ message: '注册失败' })
           })
-
         })
       },
       nickInput (e) {
@@ -127,7 +145,7 @@
             },1000)
           } else {
             self.$notice.toast({message: '发送失败，请重试'})
-            this.isTimering = false
+            self.isTimering = false
           }
         })
       },
@@ -140,6 +158,14 @@
           this.timer = 0
           this.codeText = '获取验证码'
         }
+      },
+
+      agreementClicked () {
+        this.$router.toWebView({
+          url: 'https://maimaituiguang.github.io/mm-web/agreement.html',
+          title: '协议',
+          navShow: true
+        })
       }
     }
   }
@@ -154,7 +180,6 @@
     width: 130px;
     height: 130px;
     border-radius: 7px;
-    margin-top: 60px;
     margin-bottom: 30px;
   }
   .cell {
@@ -174,6 +199,13 @@
     padding: 10px;
     border-radius: 7px;
     font-size: 20px;
+  }
+  .xieyi {
+    flex-direction: row;
+    justify-content: center;
+    width: 750px;
+    margin-bottom: 20px;
+    padding: 20px;
   }
   
 </style>

@@ -53,9 +53,6 @@ export default {
   }),
   created () {
     this.queryTask()
-    this.$storage.get('account').then(resData => {
-      this.userName = resData.nick
-    })
     this.$event.on('updateWallet', params => {
       this.queryTask()
     })
@@ -70,6 +67,9 @@ export default {
     queryTask () {
       this.$storage.get('avator').then(resData => {
         this.avator = resData
+      })
+      this.$storage.get('account').then(resData => {
+        this.userName = resData.nick
       })
       this.$fetch({
           method: 'GET',
