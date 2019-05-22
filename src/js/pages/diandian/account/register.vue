@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="container" :style="containerStyle">
-    <text style="font-size: 45px;">短信验证{{type ? "登录" : "注册"}}</text>
+    <text style="font-size: 45px;">短信验证{{title}}</text>
     <div class="xieyi">
       <text style="color: #999; font-size: 22px;">登录注册表示同意 </text>
       <text style="color: #4BB93B; font-size: 22px;" @click="agreementClicked">麦麦推广协议</text>
@@ -10,25 +10,25 @@
     <div style="align-items: flex-end; width: 750px;">
       <wxc-cell v-if="!type" class="cell" :has-bottom-border="true">
         <text class="cell-label" slot="label">昵称</text>
-        <input class="cell-title" slot="title" placeholder="例如：陈峰" @input="nickInput" />
+        <input class="cell-title" slot="title" placeholder="例如：陈峰" @input="(e)=>{this.nick = e.value}" />
       </wxc-cell>
       <wxc-cell class="cell" :has-bottom-border="true">
         <text class="cell-label" slot="label">手机号</text>
-        <input class="cell-title" max-length=11 slot="title" placeholder="请填写手机号码" type="number" @input="phoneInput" @change="phoneChanged" />
+        <input class="cell-title" max-length=11 slot="title" placeholder="请填写手机号码" type="number" @input="(e)=>{this.phone = e.value}" @change="phoneChanged" />
         <text v-if="phone.length == 11" class="cell-code" :style="codeStyle" slot="value" @click="fetchCode">{{codeText}}</text>
       </wxc-cell>
       <wxc-cell class="cell" :has-bottom-border="true">
         <text class="cell-label" slot="label">验证码</text>
-        <input class="cell-title" slot="title" type="number" placeholder="请输入验证码" @input="codeInput" />
+        <input class="cell-title" slot="title" type="number" placeholder="请输入验证码" @input="(e)=>{this.code = e.value}" />
       </wxc-cell>
     </div>
     <wxc-button :btnStyle="btnStyle" 
-                :text="type?'登录':'注册'" 
+                :text="title" 
                 :disabled="((this.nick!='' || this.type==1 ) && this.phone!='' && this.code!='') == false" 
                 @wxcButtonClicked="submit">
                 </wxc-button>
-    <div style="align-items: flex-start; width: 750px;" @click="(e)=>{this.type = !this.type}">
-      <text style="font-size: 30px; color: #4BB93B; padding: 40px; margin-left: 20px;">切换到{{!type?"登录":"注册"}}</text>
+    <div style="align-items: flex-start; width: 750px;" @click="(e)=>{this.type = !this.type; this.title = this.type?'登录':'注册'}">
+      <text style="font-size: 30px; color: #4BB93B; padding: 40px; margin-left: 20px;">切换到{{!type?'登录':'注册'}}</text>
     </div>
   </div>
 </div>  
@@ -45,8 +45,10 @@
           backgroundColor:'#4BB93B', 
           width: 630+'px', 
           height: 80+'px',
-          fontSize: 32+'px'
+          fontSize: 32+'px',
+          marginTop: 40+'px'
         },
+        title: '注册',
         type: 0,
         nick: '',
         phone: '',
@@ -100,11 +102,11 @@
           self.$fetch({
             method: 'POST',
             name: 'account.register',
-            data: this.type ? login : register
+            data: self.type ? login : register
           }).then(resData => {
             self.$notice.loading.hide()
             if (resData.success == '1') {
-              self.$notice.toast({ message: '注册成功' })
+              self.$notice.toast({ message: self.title+'成功' })
               self.$storage.set('account', resData.data).then(resData => {
                 self.$event.emit('registerSuccess')
                 setTimeout(() => {
@@ -114,20 +116,11 @@
               
               return
             }
-            self.$notice.toast({ message: '注册失败, 请重试' })  
+            self.$notice.toast({ message: self.title+'失败, 请重试' })  
           }, error => {
-            self.$notice.toast({ message: '注册失败' })
+            self.$notice.toast({ message: self.title+'失败' })
           })
         })
-      },
-      nickInput (e) {
-        this.nick = e.value
-      },
-      phoneInput (e) {
-        this.phone = e.value
-      },
-      codeInput (e) {
-        this.code = e.value
       },
       fetchCode () {
         if (this.isTimering) {

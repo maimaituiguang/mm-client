@@ -77,17 +77,22 @@
           <text slot="title">2582985333</text>
         </wxc-cell>
       </cell>
+      <!-- <cell style="padding: 40px; padding-bottom: 100px;">
+        <wxc-button :btnStyle="{backgroundColor: '#4BB93B', height: '80px', width: '670px'}"
+                    text="退出登录" 
+                    @wxcButtonClicked="logout"></wxc-button>
+      </cell> -->
     </list>
   </div>
 </template>
 
 <script>
-import { WxcCell } from 'weex-ui'
+import { WxcCell, wxcButton } from 'weex-ui'
 import Nav from '../components/nav'
 import Tools from '../tools'
 
 export default {
-  components: {Nav, WxcCell},
+  components: {Nav, WxcCell, wxcButton},
   data () {
     return {
       nick: '',
@@ -102,6 +107,9 @@ export default {
   created () {
     this.setMineData()
     this.$event.on('refreshAccount', params => {
+      this.onrefresh()
+    })
+    this.$event.on('registerSuccess', params => {
       this.onrefresh()
     })
   },
@@ -134,9 +142,6 @@ export default {
       })
     },
     setMineData () {
-      // this.$storage.delete('account').then(resData => {
-      //   console.log("删除成功") 
-      // })
       this.setAvator()
       this.$storage.get('account').then(resData => {
         this.nick = resData.nick
@@ -156,8 +161,13 @@ export default {
         title: '协议',
         navShow: true
       })
-    }
+    },
 
+    // logout () {
+    //   this.$storage.delete('account').then(resData => {
+    //     this.$event.emit('refresh')
+    //   })
+    // }
   }
 }
 </script>
