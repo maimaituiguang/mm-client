@@ -2,11 +2,12 @@
   <div style="background-color: #fff;">
     <list v-if="isShowPage" :show-scrollbar="false" :showRefresh="false">
       <cell class="container">
-        <text style="color:red;">{{headerTip}}</text>
-        <image ref="imageQR" class="qrcode" :src="qrcode" @load="onImageLoad"></image>
+        <text style="color:red; text-align:center;">{{headerTip}}</text>
+        <image ref="imageQR" class="qrcode" resize="contain" :src="qrcode" @load="onImageLoad"></image>
+        <image class="guide" resize="contain" src="https://maimaituiguang.github.io/mm-web/images/weixin_guide.jpg"></image>
         <wxc-button 
-          :btnStyle="{width: '600px', backgroundColor:(this.payType == 'weixin'?'#33A449':'#2E7DCE'), marginTop:'50px'}" 
-          :text="'保存二维码🔗跳转到'+(this.payType == 'weixin' ? '微信' : '支付宝')" 
+          :btnStyle="{width: '600px', backgroundColor:(this.payType == 'weixin'?'#33A449':'#2E7DCE')}" 
+          :text="'保存图片🔗跳转到'+(this.payType == 'weixin' ? '微信' : '支付宝')" 
           @wxcButtonClicked="payClicked" />
       </cell>
     </list>
@@ -35,9 +36,9 @@
       this.$router.getParams().then(resData => {
         this.payType = resData.payType
         this.price = resData.price
-        this.qrcode = 'https://maimaituiguang.github.io/mm-web/images/'+this.payType+'_'+this.price+'.png'
+        this.qrcode = 'https://maimaituiguang.github.io/mm-web/images/'+this.payType+'.jpg'
         this.$notice.loading.show('')
-        this.headerTip = '请保存支付二维码，在'+(this.payType == 'weixin' ? '微信' : '支付宝')+'中打开，长按识别'
+        this.headerTip = '请支付 '+this.price+' 元'
       })
 
       // setTimeout(() => {
@@ -56,7 +57,7 @@
         // 保存图片
         this.$refs['imageQR'].save(function(result) {})
         // 复制 url
-        this.$tools.copyString(url)
+        // this.$tools.copyString(url)
 
         const self = this
         this.$notice.alert({
@@ -85,8 +86,12 @@
     padding-top: 20px
   }
   .qrcode {
-    width: 392px;
-    height: 490px;
+    width: 500px;
+    height: 500px;
     margin-top: 40px;
+  }
+  .guide {
+    width: 670px;
+    height: 300px;
   }
 </style>

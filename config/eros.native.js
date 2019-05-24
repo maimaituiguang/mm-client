@@ -10,7 +10,8 @@ module.exports = {
     },
     'page': {
         // 'homePage': '/pages/demo/index.js',
-        'homePage': '/pages/diandian/index/entry.js',
+        // 'homePage': '/pages/diandian/index/entry.js',
+        'homePage': '/pages/diandian/index/index.js',
         'mediatorPage': '/mediator/index.js',
         // 'navBarColor': '#1DA1F2',
         'navBarColor': '#ffffff',

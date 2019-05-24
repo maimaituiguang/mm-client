@@ -20,6 +20,11 @@ const zc_0 = function() {
   return (parseInt(result.phone) * 12345).toString()
 }
 
+const userID = function() {
+  var result = Vue.prototype.$storage.getSync('account')
+  return parseInt(parseInt(result.phone) / 12345).toString()
+}
+
 // 只保留2位小数，如：2，会在2后面补上00.即2.00 
 function toDecimal2(x) { 
   var f = parseFloat(x); 
@@ -42,7 +47,8 @@ function toDecimal2(x) {
 export default {
   timeFormat,
   zc_0,
-  toDecimal2
+  toDecimal2,
+  userID
 }
 
 </script>

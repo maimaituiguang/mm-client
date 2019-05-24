@@ -1,12 +1,6 @@
 <template>
 <div>
-  <div v-if="!showTab" class="login" :style="contentStyle">
-    <wxc-button :btnStyle="{width: '400px', backgroundColor:'#33A449'}" 
-                text="注册/登录" 
-                @wxcButtonClicked="loginClicked" />
-  </div>
-  
-  <wxc-tab-bar v-if="showTab" :tab-titles="tabTitles"
+  <wxc-tab-bar v-if="!showLogin" :tab-titles="tabTitles"
                :tab-styles="tabStyles"
                :duration="duration"
                title-type="iconFont"
@@ -16,6 +10,11 @@
     <Wallet class="page-container" :style="contentStyle" />
     <Mine class="page-container" :style="contentStyle" />
   </wxc-tab-bar>
+  <div v-if="showLogin" class="login" :style="loginStyle">
+    <wxc-button :btnStyle="{width: '400px', backgroundColor:'#33A449'}" 
+                text="注册/登录" 
+                @wxcButtonClicked="loginClicked" />
+  </div>
 </div>
 </template>
 
@@ -35,13 +34,14 @@ export default {
     tabTitles: Config.tabIconFontTitles,
     tabStyles: Config.tabIconFontStyles,
     duration: 0,
-    showTab: false
+    showLogin: false
   }),
   created () {
     const tabPageHeight = Utils.env.getScreenHeight()
     const iphoneX = Utils.env.isIPhoneX()
     const { tabStyles } = this
     this.contentStyle = { height: (tabPageHeight - tabStyles.height - (iphoneX ? 80 : 0)) + 'px', width: 750 + 'px' }
+    this.loginStyle = {height: tabPageHeight+'px', widht: '750px'}
 
     const domModule = weex.requireModule('dom')
     domModule.addRule('fontFace', {
@@ -49,13 +49,15 @@ export default {
       src: `url('http://at.alicdn.com/t/font_1141272_cz4hclau60o.ttf')`
     })
 
+    this.$event.on('reloadEntry', params => {
+      this.$router.refresh()
+    })
+
     if (!this.isLogin()) {
-      this.$event.on('registerSuccess', params => {
-        this.showTab = true
-      })
-      this.$router.open({ name:'account.register', type:'PRESENT' })
+      this.loginClicked()
+      this.showLogin = true
     } else {
-      this.showTab = true
+      this.showLogin = false
     }
   },
   methods: {
@@ -73,5 +75,10 @@ export default {
   .login {
     justify-content:center;
     align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
   }
 </style>

@@ -81,7 +81,6 @@ export default {
     width: 140px;
     height: 140px;
     border-radius: 10px;
-    background-color: #ccc;
   }
   .app-cell {
     align-items: center;

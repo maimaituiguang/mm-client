@@ -109,7 +109,8 @@ export default {
       this.isBottomShow = false
     },
     memberClicked () {
-      this.isBottomShow = true
+      // this.isBottomShow = true
+      this.payClicked('weixin')
     },
     onrefresh () {
       this.$fetch({

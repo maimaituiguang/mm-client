@@ -8,6 +8,7 @@ module.exports = {
         // mediator
         'js/mediator/index.vue',
         // home
+        'js/pages/diandian/index/index.vue',
         'js/pages/diandian/index/entry.vue',
         // task detail
         'js/pages/diandian/task/taskDetail.vue',

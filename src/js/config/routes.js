@@ -5,6 +5,9 @@
 //  dev.json 的 exports 需要打包的js地址，填入src的需要被打包成js bundle的地址   从src开始
 
 export default {
+    'index.entry': {
+        url: '/pages/diandian/index/entry.js'
+    },
     'task.detail': {
         title: '任务详情',
         url: '/pages/diandian/task/taskDetail.js'

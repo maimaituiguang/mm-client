@@ -75,7 +75,7 @@ export default {
         this.$refs['list'].refreshEnd()
       }, error => {
         this.$refs['list'].refreshEnd()
-        this.$notice.toast({ message: '数据请求失败' })
+        // this.$notice.toast({ message: '数据请求失败' })
       })
     }
   }

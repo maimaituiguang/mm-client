@@ -7,6 +7,7 @@
             <div style="align-items: center;">
               <image class="user-avator" :src="avator"></image>
               <text class="user-name">{{userName}}</text>
+              <text class="user-name">ID: {{userID}}</text>
             </div>
             <div class="wallet-detail">
               <text class="user-money">账户余额</text>
@@ -49,13 +50,18 @@ export default {
     totals: '0.00',
     canTake: '0.00',
     userName: '注册用户',
-    avator: 'https://pic1.zhimg.com/da8e974dc.jpg'
+    avator: 'https://pic1.zhimg.com/da8e974dc.jpg',
+    userID: ''
   }),
   created () {
     this.queryTask()
     this.$event.on('updateWallet', params => {
       this.queryTask()
     })
+    this.$event.on('updateUserInfo', params => {
+      this.setUserInfo(params)
+    })
+    this.userID = Tools.userID()
   },
   methods: {
     onrefresh () {
@@ -65,12 +71,7 @@ export default {
       this.$router.open({ name:'wallet.history' })
     },
     queryTask () {
-      this.$storage.get('avator').then(resData => {
-        this.avator = resData
-      })
-      this.$storage.get('account').then(resData => {
-        this.userName = resData.nick
-      })
+      this.setUserInfo()
       this.$fetch({
           method: 'GET',
           name: 'wallet.money',
@@ -88,6 +89,18 @@ export default {
         this.$refs['list'].refreshEnd()
       }, error => {
           this.$refs['list'].refreshEnd()
+      })
+    },
+    setUserInfo (user={}) {
+      this.$storage.get('avator').then(resData => {
+        this.avator = resData
+      })
+      if (user.hasOwnProperty("nick")) {
+        this.userName = user.nick
+        return
+      }
+      this.$storage.get('account').then(resData => {
+        this.userName = resData.nick
       })
     }
   }

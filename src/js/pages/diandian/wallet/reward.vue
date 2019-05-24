@@ -8,6 +8,7 @@
           <div class="reward-ali-info">
             <text style="font-size: 28px; font-weight: bold;">{{card.hasOwnProperty('number') ? card.number : '请设置银行卡号'}}</text>
             <text style="font-size: 26px; color: #777; margin-top: 20px;">1-3 个工作日到账, 不超过 4 天</text>
+            <text style="font-size: 22px; color: blue; margin-top: 20px;">手续费 2%，最低 2 元</text>
           </div>
         </div>
         <div style="margin-left: 40px; margin-right: 40px;">
@@ -117,7 +118,7 @@
   .reward-header {
     flex-direction: row;
     padding-top: 40px;
-    padding-bottom: 40px;
+    padding-bottom: 20px;
     background-color: #FBFBFB;
   }
   .reward-ali-info {

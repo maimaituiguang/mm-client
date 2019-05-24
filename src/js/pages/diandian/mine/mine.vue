@@ -18,10 +18,18 @@
       </cell>
       <cell class="cell-temp-line"></cell>
       <cell>
+        <wxc-cell label="用户 ID"
+                  :has-arrow="false"
+                  :has-top-border="true"
+                  :has-bottom-border="true">
+          <text slot="title">{{userID}}</text>
+        </wxc-cell>
+      </cell>
+      <cell>
         <wxc-cell label="收益明细"
                   :has-arrow="true"
                   @wxcCellClicked="(e) => {this.$router.open({ name:'wallet.history' })}"
-                  :has-top-border="true"
+                  :has-top-border="false"
                   :has-bottom-border="true">
         </wxc-cell>
       </cell>
@@ -60,14 +68,6 @@
           <text slot="title">{{ card.hasOwnProperty('number') ? card.number : '点击设置银行卡号' }}</text>
         </wxc-cell>
       </cell>
-      <cell>
-        <wxc-cell label="手机号码"
-                  :has-arrow="false"
-                  :has-top-border="false"
-                  :has-bottom-border="true">
-          <text slot="title">{{phone}}</text>
-        </wxc-cell>
-      </cell>
       <cell class="cell-temp-line"></cell>
       <cell>
         <wxc-cell label="客服 QQ"
@@ -77,11 +77,11 @@
           <text slot="title">2582985333</text>
         </wxc-cell>
       </cell>
-      <!-- <cell style="padding: 40px; padding-bottom: 100px;">
+      <cell style="padding: 40px; padding-bottom: 100px;">
         <wxc-button :btnStyle="{backgroundColor: '#4BB93B', height: '80px', width: '670px'}"
                     text="退出登录" 
                     @wxcButtonClicked="logout"></wxc-button>
-      </cell> -->
+      </cell>
     </list>
   </div>
 </template>
@@ -101,15 +101,13 @@ export default {
       card: {},
       role: 0,
       reward: 0,
-      avator: 'https://pic1.zhimg.com/da8e974dc.jpg'
+      avator: 'https://pic1.zhimg.com/da8e974dc.jpg',
+      userID: ''
     }
   },
   created () {
-    this.setMineData()
+    this.onrefresh()
     this.$event.on('refreshAccount', params => {
-      this.onrefresh()
-    })
-    this.$event.on('registerSuccess', params => {
       this.onrefresh()
     })
   },
@@ -132,18 +130,27 @@ export default {
         this.$refs['list'].refreshEnd()
         if (resData.success == '1') {
           this.$storage.set('account', resData.data).then(resData => {
-            this.setMineData()
+            this.setMineData(resData)
             this.setAvator ()
           })
         }
       }, error => {
         this.$refs['list'].refreshEnd()
-        this.$notice.toast({ message: '数据请求失败' })
+        // this.$notice.toast({ message: '数据请求失败' })
       })
     },
-    setMineData () {
+    setMineData (data={}) {
       this.setAvator()
+      if (data.hasOwnProperty("nick")) {
+        this.bindInfo(resData)
+        return
+      }
       this.$storage.get('account').then(resData => {
+        this.bindInfo(resData)
+      })
+    },
+
+    bindInfo (resData) {
         this.nick = resData.nick
         this.roleName = resData.role_name
         this.phone = resData.phone
@@ -152,7 +159,8 @@ export default {
         if (resData.hasOwnProperty("card")) {
           this.card = resData.card
         } 
-      })
+        this.$event.emit('updateUserInfo', resData)
+        this.userID = Tools.userID()
     },
 
     agreementClicked () {
@@ -163,11 +171,11 @@ export default {
       })
     },
 
-    // logout () {
-    //   this.$storage.delete('account').then(resData => {
-    //     this.$event.emit('refresh')
-    //   })
-    // }
+    logout () {
+      this.$storage.delete('account').then(resData => {
+        this.$event.emit('reloadEntry')
+      })
+    }
   }
 }
 </script>

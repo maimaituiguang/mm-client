@@ -27,7 +27,7 @@
                 :disabled="((this.nick!='' || this.type==1 ) && this.phone!='' && this.code!='') == false" 
                 @wxcButtonClicked="submit">
                 </wxc-button>
-    <div style="align-items: flex-start; width: 750px;" @click="(e)=>{this.type = !this.type; this.title = this.type?'登录':'注册'}">
+    <div style="align-items: flex-start; width: 750px;" @click="(e)=>{this.type = !this.type; this.title = this.type?'登录':'注册';}">
       <text style="font-size: 30px; color: #4BB93B; padding: 40px; margin-left: 20px;">切换到{{!type?'登录':'注册'}}</text>
     </div>
   </div>
@@ -108,7 +108,7 @@
             if (resData.success == '1') {
               self.$notice.toast({ message: self.title+'成功' })
               self.$storage.set('account', resData.data).then(resData => {
-                self.$event.emit('registerSuccess')
+                self.$event.emit('reloadEntry')
                 setTimeout(() => {
                   self.$router.back({type:'PRESENT'})  
                 }, 1000);
