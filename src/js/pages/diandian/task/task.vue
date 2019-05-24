@@ -53,6 +53,9 @@ export default {
     onrefresh () {
       this.queryTask()
       this.account = this.$storage.getSync('account')
+      this.$event.on('refreshTask', params => {
+        this.queryTask()
+      })
     },
     tapedAllTaskItem () {
       this.$router.open({ name: 'task.list' })

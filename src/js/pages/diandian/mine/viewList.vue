@@ -24,9 +24,11 @@ export default {
   },
   components: { TaskCell },
   data: () => ({
-    lists: []
+    lists: [],
+    account: {}
   }),
   created () {
+    this.account = this.$storage.getSync('account')
     this.query().then(data => {
       this.lists = data
       this.$refs['list'].refreshEnd()
@@ -48,16 +50,16 @@ export default {
     async query () {
       var list = []
       await this.$fetch({
-          method: 'GET',
-          url: host + '/view-task/' + this.status,
-          header: {
-            zc_0: Tools.zc_0()
-          }
+        method: 'GET',
+        url: host + '/view-task/' + this.status,
+        header: {
+          zc_0: Tools.zc_0()
+        }
       }).then(resData => {
-          list = resData
+        list = resData
       }, error => {
-          this.$refs['list'].refreshEnd()
-          this.$refs['list'].loadMoreEnd()
+        this.$refs['list'].refreshEnd()
+        this.$refs['list'].loadMoreEnd()
       })
       return list
     }

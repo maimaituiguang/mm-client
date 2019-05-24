@@ -108,10 +108,10 @@
             if (resData.success == '1') {
               self.$notice.toast({ message: self.title+'成功' })
               self.$storage.set('account', resData.data).then(resData => {
-                self.$event.emit('reloadEntry')
+                self.$router.back({type:'PRESENT'})
                 setTimeout(() => {
-                  self.$router.back({type:'PRESENT'})  
-                }, 1000);
+                  self.$event.emit('reloadEntry')
+                }, 300);
               })
               
               return

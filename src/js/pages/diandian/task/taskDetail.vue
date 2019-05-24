@@ -75,18 +75,20 @@ export default {
       endTime: 0,
       number:'',
       password: '',
-      role: 0
     }
   },
   created () {
+    const self  = this
     this.$router.getParams().then(resData => {
-      this.data = resData
-      this.endTime = Tools.timeFormat(resData.end_time)
+      self.data = resData
+      self.endTime = Tools.timeFormat(resData.end_time)
+      self.$storage.get('account').then(res => {
+        self.data.role = re.role
+        self.data.reward = res.reward
+      })
     })
 
-    this.$storage.get('account').then(resData => {
-      this.role = resData.role
-    })
+    
   },
   methods: {
     onrefresh () {
@@ -94,6 +96,7 @@ export default {
           this.$refs['list'].refreshEnd()
       }, 1000)
     },
+    
     onClikedHeader () {
       // iOS 'https://www.qimai.cn/app/baseinfo/appid/'+this.data.detail.appId+'/country/cn'
       this.$router.toWebView({
@@ -103,7 +106,7 @@ export default {
       })
     },
     wxcButtonClicked () {
-      if (this.role == 0) {
+      if (this.data.role == 0) {
         const self = this
         this.$notice.alert({
           title: '请先开通会员',
@@ -135,6 +138,7 @@ export default {
       }).then(resData => {
         if (resData.success == '1') {
           this.$notice.toast({ message: '完成任务' })
+          this.$event.emit('refreshTask')
           setTimeout(() => {
             this.$router.back({})
           }, 1000)
