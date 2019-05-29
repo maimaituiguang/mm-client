@@ -84,7 +84,7 @@ export default {
           this.unTake = Tools.toDecimal2(data.un_take)
           this.hasTake = Tools.toDecimal2(data.has_take)
           this.totals = Tools.toDecimal2(data.un_take + data.has_take)
-          this.canTake = this.unTake - 20 > 0 ? this.canTake : '0.00'
+          this.canTake = this.unTake - 20 > 0 ? this.unTake : '0.00'
         }
         this.$refs['list'].refreshEnd()
       }, error => {

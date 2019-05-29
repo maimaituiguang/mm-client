@@ -83,6 +83,8 @@
         if (!(this.inputValue > 0 && this.inputValue <= parseFloat(this.canTake) && this.alipay != '请设置支付宝账号')) {
           return
         }
+
+        this.$notice.loading.show()
         this.$fetch({
           method: 'POST',
           name: 'wallet.take',
@@ -93,6 +95,7 @@
             count: parseFloat(this.inputValue)
           }
         }).then(resData => {
+          this.$notice.loading.hide()
           if (resData.success == '1') {
             this.$notice.toast({ message: '提现成功，1～3 个工作日到账'})
             this.canTake = Tools.toDecimal2(parseFloat(this.canTake) - parseFloat(this.inputValue))
@@ -102,6 +105,7 @@
           }
           this.$notice.toast({ message: '提交失败，请重试' })  
         }, error => {
+          this.$notice.loading.hide()
           this.$notice.toast({ message: '提交失败' })
         })
       }

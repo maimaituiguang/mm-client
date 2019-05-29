@@ -42,13 +42,13 @@ export default {
     async query (offset = 0) {
       var list = []
       await this.$fetch({
-          method: 'GET',
-          url: host + '/all-task/' + offset
+        method: 'GET',
+        url: host + '/all-task/' + offset
       }).then(resData => {
-          list = resData
+        list = resData
       }, error => {
-          this.$refs['list'].refreshEnd()
-          this.$refs['list'].loadMoreEnd()
+        this.$refs['list'].refreshEnd()
+        this.$refs['list'].loadMoreEnd()
       })
       return list
     }

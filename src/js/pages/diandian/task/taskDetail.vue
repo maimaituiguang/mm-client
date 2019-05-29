@@ -87,8 +87,6 @@ export default {
         self.data.reward = res.reward
       })
     })
-
-    
   },
   methods: {
     onrefresh () {
@@ -96,7 +94,7 @@ export default {
           this.$refs['list'].refreshEnd()
       }, 1000)
     },
-    
+
     onClikedHeader () {
       // iOS 'https://www.qimai.cn/app/baseinfo/appid/'+this.data.detail.appId+'/country/cn'
       this.$router.toWebView({

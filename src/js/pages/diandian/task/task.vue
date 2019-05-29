@@ -22,8 +22,8 @@
       <cell v-for="(item, index) in lists" :key="item._id" :index="index" @click="(e) => { handleClickedCell(e, item) }">
         <TaskCell :item="item" style="margin-left: 40px; margin-right: 40px;" />
       </cell>
-      <cell v-if="lists.length == 0" style="align-items: center; padding-top: 80px;">
-        <text>任务已做完或还未下发任务</text>
+      <cell v-if="lists.length == 0" style="align-items: center; padding-top: 80px; padding-left: 40px; padding-right: 40px;">
+        <text>{{message}}</text>
       </cell>
     </list>
   </div>
@@ -42,6 +42,7 @@ export default {
   data () {
     return {
       navTempHeight: (Utils.env.isIPhoneX() ? 88 : 0),
+      message: '任务已做完或还未下发任务',
       lists: [],
       account: {}
     }
@@ -71,6 +72,10 @@ export default {
           zc_0: Tools.zc_0()
         }
       }).then(resData => {
+        if (resData.hasOwnProperty('message')) {
+          this.message = resData.message
+          return
+        }
         for (var item of resData) {
           item.reward = this.account.reward
         }
@@ -78,7 +83,6 @@ export default {
         this.$refs['list'].refreshEnd()
       }, error => {
         this.$refs['list'].refreshEnd()
-        // this.$notice.toast({ message: '数据请求失败' })
       })
     }
   }
