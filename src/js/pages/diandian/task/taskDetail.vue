@@ -131,7 +131,7 @@ export default {
           task_id: this.data._id,
           app_number: this.number,
           app_password: this.password,
-          reward: this.data.reward
+          reward: this.reward
         }
       }).then(resData => {
         if (resData.success == '1') {
