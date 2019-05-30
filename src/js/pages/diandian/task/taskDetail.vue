@@ -51,7 +51,7 @@
                   :has-arrow="false"
                   :has-top-border="false"
                   :has-bottom-border="true">
-          <text slot="title" style="font-weight: bold; color: #FE802B;">{{ data.reward }} 元</text>
+          <text slot="title" style="font-weight: bold; color: #FE802B;">{{ reward }} 元</text>
         </wxc-cell>
       </cell>
       <cell style="height: 200px; justify-content: center; align-items: center;">
@@ -75,6 +75,8 @@ export default {
       endTime: 0,
       number:'',
       password: '',
+      role: 0,
+      reward: 0
     }
   },
   created () {
@@ -82,11 +84,9 @@ export default {
     this.$router.getParams().then(resData => {
       self.data = resData
       self.endTime = Tools.timeFormat(resData.end_time)
-      self.$storage.get('account').then(res => {
-        self.data.role = re.role
-        self.data.reward = res.reward
-      })
     })
+
+    this.account()
   },
   methods: {
     onrefresh () {
@@ -104,7 +104,7 @@ export default {
       })
     },
     wxcButtonClicked () {
-      if (this.data.role == 0) {
+      if (this.role == 0) {
         const self = this
         this.$notice.alert({
           title: '请先开通会员',
@@ -152,6 +152,23 @@ export default {
     },
     pwdOnInput (e) {
       this.password = e.value
+    },
+    account () {
+      this.$fetch({
+        method: 'GET',
+        name: 'mine.account',
+        header: {
+          zc_0: Tools.zc_0()
+        }
+      }).then(resData => {
+        this.$refs['list'].refreshEnd()
+        if (resData.success == '1') {
+          this.role = resData.data.role
+          this.reward = resData.data.reward
+        }
+      }, error => {
+        this.$notice.toast({ message: '数据请求失败' })
+      })
     }
   }
 }

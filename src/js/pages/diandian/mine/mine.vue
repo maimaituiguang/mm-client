@@ -129,6 +129,10 @@ export default {
       }).then(resData => {
         this.$refs['list'].refreshEnd()
         if (resData.success == '1') {
+          if (resData.data.hasOwnProperty("phone") == false) {
+            this.logout()
+            return
+          } 
           this.$storage.set('account', resData.data).then(resData => {
             this.setMineData(resData)
             this.setAvator ()
