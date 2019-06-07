@@ -24,13 +24,9 @@ export default {
         title: '收益明细',
         url: '/pages/diandian/wallet/history.js'
     },
-    'account.login': {
-        title: '',
-        url: '/pages/diandian/account/login.js'
-    },
-    'account.register': {
+    'account.account': {
         title: ' ',
-        url: '/pages/diandian/account/register.js'
+        url: '/pages/diandian/account/account.js'
     },
     'mine.viewTask': {
         title: '任务查看',

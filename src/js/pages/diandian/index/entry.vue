@@ -65,7 +65,7 @@ export default {
       return (this.$storage.getSync('account') != '')
     },
     loginClicked () {
-      this.$router.open({ name:'account.register', type:'PRESENT' })
+      this.$router.open({ name:'account.account', type:'PRESENT' })
     }
   }
 }

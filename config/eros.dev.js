@@ -18,10 +18,8 @@ module.exports = {
         'js/pages/diandian/wallet/reward.vue',
         // history
         'js/pages/diandian/wallet/history.vue',
-        // account login
-        'js/pages/diandian/account/login.vue',
         // account register
-        'js/pages/diandian/account/register.vue',
+        'js/pages/diandian/account/account.vue',
         // view task
         'js/pages/diandian/mine/viewTask.vue',
         // members

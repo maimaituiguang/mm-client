@@ -6,7 +6,7 @@
         <div class="reward-header">
           <text style="font-size: 28px; margin-left: 60px;">到银行卡</text>
           <div class="reward-ali-info">
-            <text style="font-size: 28px; font-weight: bold;">{{card.hasOwnProperty('number') ? card.number : '请设置银行卡号'}}</text>
+            <text style="font-size: 28px; font-weight: bold;">{{number}}</text>
             <text style="font-size: 26px; color: #777; margin-top: 20px;">1-3 个工作日到账, 不超过 4 天</text>
             <text style="font-size: 22px; color: blue; margin-top: 20px;">手续费 2%，最低 2 元</text>
           </div>
@@ -45,7 +45,9 @@
       buttonEnable: false,
       card: {},
       canTake: '0.00',
-      inputValue:''
+      inputValue:'',
+      number: '请「我的」设置银行卡号',
+      isLoading: false
     }),
     eros: {
       beforeAppear (params, options) {
@@ -66,6 +68,9 @@
       this.$storage.get('account').then(resData => {
         if (resData.hasOwnProperty("card")) {
           this.card = resData.card
+          if (this.card.hasOwnProperty('number')) {
+            this.number = this.card.number
+          }
         } 
       })
     },
@@ -80,10 +85,16 @@
         this.inputValue = e.value
       },
       reward () {
-        if (!(this.inputValue > 0 && this.inputValue <= parseFloat(this.canTake) && this.alipay != '请设置支付宝账号')) {
+        if (!(this.inputValue > 0 && this.inputValue <= parseFloat(this.canTake) && !this.isLoading)) {
           return
         }
 
+        if (this.card.hasOwnProperty('number') == false) {
+          this.$notice.toast({message: this.number})
+          return
+        }
+
+        this.isLoading = true
         this.$notice.loading.show()
         this.$fetch({
           method: 'POST',
@@ -95,6 +106,7 @@
             count: parseFloat(this.inputValue)
           }
         }).then(resData => {
+          this.isLoading = false
           this.$notice.loading.hide()
           if (resData.success == '1') {
             this.$notice.toast({ message: '提现成功，1～3 个工作日到账'})
@@ -105,6 +117,7 @@
           }
           this.$notice.toast({ message: '提交失败，请重试' })  
         }, error => {
+          this.isLoading = false
           this.$notice.loading.hide()
           this.$notice.toast({ message: '提交失败' })
         })

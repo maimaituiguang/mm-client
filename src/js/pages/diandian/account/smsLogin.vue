@@ -1,15 +1,12 @@
 <template>
 <div class="container">
-  <text style="font-size: 45px;">手机号注册</text>
+  <text style="font-size: 45px;">{{title}}</text>
   <div class="xieyi">
-    <text style="color: #999; font-size: 22px;">{{title}}表示同意 </text>
+    <text style="color: #999; font-size: 22px;">继续操作表示同意</text>
     <text style="color: #4BB93B; font-size: 22px;" @click="agreementClicked">麦麦推广协议</text>
   </div>
+  
   <div style="align-items: flex-end; width: 750px;">
-    <wxc-cell v-if="!type" class="cell" :has-bottom-border="true">
-      <text class="cell-label" slot="label">昵称</text>
-      <input class="cell-title" slot="title" placeholder="例如：陈峰" @input="(e)=>{this.nick = e.value}" />
-    </wxc-cell>
     <wxc-cell class="cell" :has-bottom-border="true">
       <text class="cell-label" slot="label">手机号</text>
       <input class="cell-title" max-length=11 slot="title" placeholder="请填写手机号码" type="number" @input="(e)=>{this.phone = e.value}" @change="phoneChanged" />
@@ -26,7 +23,7 @@
   </div>
   <wxc-button :btnStyle="btnStyle" 
               :text="title" 
-              :disabled="!(this.nick!='' && this.phone!='' && this.code!='' && this.password.length >= 6)" 
+              :disabled="!(this.phone!='' && this.code!='' && this.password)" 
               @wxcButtonClicked="submit">
               </wxc-button>
 </div>
@@ -46,11 +43,10 @@
           fontSize: 32+'px',
           marginTop: 40+'px'
         },
-        title: '注册',
-        password: '',
-        nick: '',
+        title: '重设密码',
         phone: '',
         code: '',
+        password: '',
         codeText: '获取验证码',
         isTimering: false,
         timer: 30,
@@ -79,12 +75,11 @@
           }
 
           const register = {
-            nick: self.nick,
             phone: self.phone,
             code: self.code,
             password: self.password
           }
-          
+
           self.$fetch({
             method: 'POST',
             name: 'account.register',
@@ -104,7 +99,6 @@
             }
             self.$notice.toast({ message: self.title+'失败, 请重试' })  
           }, error => {
-            self.$notice.loading.hide()
             self.$notice.toast({ message: self.title+'失败' })
           })
         })

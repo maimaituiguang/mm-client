@@ -4,6 +4,7 @@ export default {
     'task.doing': '/task',
     'task.submit': '/submit-task',
     'account.register': '/register',
+    'account.login': '/client-login',
     'wallet.money': '/wallet',
     'wallet.take': '/take',
     'wallet.history': '/reward-record',

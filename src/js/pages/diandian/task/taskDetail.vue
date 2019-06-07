@@ -76,7 +76,8 @@ export default {
       number:'',
       password: '',
       role: 0,
-      reward: 0
+      reward: 0,
+      isLoading: false
     }
   },
   created () {
@@ -104,6 +105,10 @@ export default {
       })
     },
     wxcButtonClicked () {
+      if (this.isLoading) {
+        return
+      }
+
       if (this.role == 0) {
         const self = this
         this.$notice.alert({
@@ -121,6 +126,8 @@ export default {
         return
       }
 
+      this.isLoading = true
+      this.$notice.loading.show()
       this.$fetch({
         method: 'POST',
         name: 'task.submit',
@@ -134,6 +141,8 @@ export default {
           reward: this.reward
         }
       }).then(resData => {
+        this.isLoading = false
+        this.$notice.loading.hide()
         if (resData.success == '1') {
           this.$notice.toast({ message: '完成任务' })
           this.$event.emit('refreshTask')
@@ -144,6 +153,8 @@ export default {
         }
         this.$notice.toast({ message: '任务提交失败' })  
       }, error => {
+        this.isLoading = false
+        this.$notice.loading.hide()
         this.$notice.toast({ message: '提交失败' })
       })
     },
