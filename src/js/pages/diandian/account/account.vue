@@ -1,16 +1,14 @@
 <template>
 <div>
-<div class="container" :style="containerStyle">
-  <Login v-if="cardType == 1" />
-  <Register v-if="cardType == 2" />
-  <SMSLogin v-if="cardType == 3" />
-  <div class="switch-scope" @click="cardSwitch(cardType)">
-    <text style="font-size: 30px; color: #4BB93B; padding: 40px; margin-left: 20px;">{{title}}</text>
-    <text v-if="cardType == 1"
-          style="font-size: 26px; padding: 40px; color: #444; margin-right: 20px;"
-          @click="cardSwitch(0)">忘记密码？</text>
+  <div class="container" :style="containerStyle">
+    <Login :style="{maxHeight: cardType == 1 ? 'auto': '0px'}"></Login>
+    <Register :style="{maxHeight: cardType == 2 ? 'auto': '0px'}"></Register>
+    <SMSLogin :style="{maxHeight: cardType == 3 ? 'auto': '0px'}"></SMSLogin>
+    <div class="switch-scope" @click="cardSwitch(cardType)">
+      <text class="left-btn">{{title}}</text>
+      <text v-if="cardType == 1" class="right-btn" @click="cardSwitch(0)">忘记密码？</text>
+    </div>
   </div>
-</div>
 </div>
 </template>
 <script>
@@ -28,7 +26,6 @@
         containerStyle: {},
         cardType: 1,
         title: '切换到注册'
-
       }
     },
     created () {
@@ -74,5 +71,17 @@
     width: 750px;
     flex-direction: row;
     justify-content: space-between;
+  }
+  .left-btn {
+    font-size: 30px; 
+    color: #4BB93B; 
+    padding: 40px; 
+    margin-left: 20px;
+  }
+  .right-btn {
+    font-size: 26px; 
+    padding: 40px; 
+    color: #444; 
+    margin-right: 20px;
   }
 </style>

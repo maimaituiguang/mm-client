@@ -21,7 +21,7 @@
     </wxc-cell>
     <wxc-cell class="cell" :has-bottom-border="true">
       <text class="cell-label" slot="label">密码</text>
-      <input class="cell-title" slot="title" type="number" placeholder="请输入 6 位以上密码" @input="(e)=>{this.password = e.value}" />
+      <input class="cell-title" slot="title" type="password" placeholder="请输入 6 位以上密码" @input="(e)=>{this.password = e.value}" />
     </wxc-cell>
   </div>
   <wxc-button :btnStyle="btnStyle" 
