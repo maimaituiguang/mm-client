@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="login-page">
   <text style="font-size: 45px;">密码登录</text>
   <div class="xieyi">
     <text style="color: #999; font-size: 22px;">登录即表示同意 </text>
@@ -8,7 +8,7 @@
   <div style="align-items: flex-end; width: 750px;">
     <wxc-cell class="cell" :has-bottom-border="true">
       <text class="cell-label" slot="label">手机号</text>
-      <input class="cell-title" max-length=11 slot="title" placeholder="请填写手机号码" type="number" @input="(e)=>{this.phone = e.value}" @change="phoneChanged" />
+      <input class="cell-title" max-length=11 slot="title" placeholder="请填写手机号码" type="number" @input="(e)=>{this.phone = e.value}" />
     </wxc-cell>
     <wxc-cell class="cell" :has-bottom-border="true">
       <text class="cell-label" slot="label">密码</text>
@@ -16,15 +16,18 @@
     </wxc-cell>
   </div>
   <wxc-button :btnStyle="btnStyle" 
-              :text="title" 
-              :disabled="!(this.phone!='' && this.code!='')" 
+              text="登录" 
+              :disabled="!(this.phone != '' && this.code.length >= 6)" 
               @wxcButtonClicked="submit">
               </wxc-button>
+  <div class="switch-scope">
+    <text class="left-btn" @click="cardSwitch(1)">切换到注册</text>
+    <text class="right-btn" @click="cardSwitch(2)">忘记密码？</text>
+  </div>
 </div>
 </template>
 <script>
   import { WxcCell, wxcButton, Utils } from 'weex-ui'
-  const sms = weex.requireModule('smsCode')
 
   export default {
     components: {WxcCell, wxcButton},
@@ -37,7 +40,6 @@
           fontSize: 32+'px',
           marginTop: 40+'px'
         },
-        title: '登录',
         phone: '',
         code: ''
       }
@@ -45,6 +47,10 @@
     created () {},
     methods: {
       submit () {
+        if (this.phone == '' || this.code < 6) {
+          return
+        }
+
         this.$notice.loading.show()
         const self = this
         self.$fetch({
@@ -57,19 +63,18 @@
         }).then(resData => {
           self.$notice.loading.hide()
           if (resData.success == '1') {
-            self.$notice.toast({ message: self.title+'成功' })
-            self.$storage.set('account', resData.data).then(resData => {
-              self.$router.back({type:'PRESENT'})
-              setTimeout(() => {
+            self.$notice.toast({ message: '登录成功' })
+            setTimeout(() => {
+              self.$storage.set('account', resData.data).then(resData => {
                 self.$event.emit('reloadEntry')
-              }, 300);
-            })  
+              })  
+            }, 100)
             return
           }
           self.$notice.toast({ message: '账号或密码错误' })  
         }, error => {
           self.$notice.loading.hide()
-          self.$notice.toast({ message: self.title+'失败' })
+          self.$notice.toast({ message: "登录失败，请重试" })
         })
       },
 
@@ -79,15 +84,20 @@
           title: '协议',
           navShow: true
         })
+      },
+
+      cardSwitch(e) {
+        this.$emit('switchToCard', e)
       }
     }
   }
 </script>
 
 <style scoped>
-  .container {
+  .login-page {
     align-items: center;
     background-color: #ffffff;
+    width: 750px;
   }
   .user-avator {
     width: 130px;
@@ -119,6 +129,24 @@
     width: 750px;
     margin-bottom: 20px;
     padding: 20px;
+  }
+  .switch-scope {
+    align-items: center;
+    width: 750px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .left-btn {
+    font-size: 30px; 
+    color: #4BB93B; 
+    padding: 40px; 
+    margin-left: 20px;
+  }
+  .right-btn {
+    font-size: 26px; 
+    padding: 40px; 
+    color: #444; 
+    margin-right: 20px;
   }
   
 </style>

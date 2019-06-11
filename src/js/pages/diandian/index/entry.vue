@@ -10,11 +10,7 @@
     <Wallet class="page-container" :style="contentStyle" />
     <Mine class="page-container" :style="contentStyle" />
   </wxc-tab-bar>
-  <div v-if="showLogin" class="login" :style="loginStyle">
-    <wxc-button :btnStyle="{width: '400px', backgroundColor:'#33A449'}" 
-                text="注册/登录" 
-                @wxcButtonClicked="loginClicked" />
-  </div>
+  <Login v-if="showLogin" class="login" :style="loginStyle" />
 </div>
 </template>
 
@@ -27,9 +23,10 @@ import Task from '../task/task'
 import Apps from '../app/apps'
 import Wallet from '../wallet/wallet'
 import Mine from '../mine/mine'
+import Login from '../account/account'
 
 export default {
-  components: {WxcTabBar, Task, Apps, Wallet, Mine, WxcButton},
+  components: {WxcTabBar, Task, Apps, Wallet, Mine, WxcButton, Login},
   data: () => ({
     tabTitles: Config.tabIconFontTitles,
     tabStyles: Config.tabIconFontStyles,
@@ -54,7 +51,6 @@ export default {
     })
 
     if (!this.isLogin()) {
-      this.loginClicked()
       this.showLogin = true
     } else {
       this.showLogin = false
@@ -63,9 +59,6 @@ export default {
   methods: {
     isLogin () {
       return (this.$storage.getSync('account') != '')
-    },
-    loginClicked () {
-      this.$router.open({ name:'account.account', type:'PRESENT' })
     }
   }
 }
@@ -73,12 +66,7 @@ export default {
 
 <style scoped>
   .login {
-    justify-content:center;
-    align-items: center;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     background-color: #fff;
   }
 </style>

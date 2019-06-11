@@ -1,13 +1,9 @@
 <template>
 <div>
-  <div class="container" :style="containerStyle">
-    <Login :style="{maxHeight: cardType == 1 ? 'auto': '0px'}"></Login>
-    <Register :style="{maxHeight: cardType == 2 ? 'auto': '0px'}"></Register>
-    <SMSLogin :style="{maxHeight: cardType == 3 ? 'auto': '0px'}"></SMSLogin>
-    <div class="switch-scope" @click="cardSwitch(cardType)">
-      <text class="left-btn">{{title}}</text>
-      <text v-if="cardType == 1" class="right-btn" @click="cardSwitch(0)">忘记密码？</text>
-    </div>
+  <div ref="card-container" class="container" :style="containerStyle">
+    <Login @switchToCard="cardSwitch" />
+    <Register @switchToCard="cardSwitch" />
+    <SMSLogin @switchToCard="cardSwitch" />
   </div>
 </div>
 </template>
@@ -17,45 +13,41 @@
   import Register from './register'
   import SMSLogin from './smsLogin'
 
+  const animation = weex.requireModule('animation')
   const sms = weex.requireModule('smsCode')
 
   export default {
     components: {Login, Register, SMSLogin},
     data () {
       return {
-        containerStyle: {},
-        cardType: 1,
-        title: '切换到注册'
+        containerStyle: {}
+      }
+    },
+    deforeDestroy () {
+      if (Utils.env.isAndroid()) {
+        sms.unregisterEventHandler()
       }
     },
     created () {
       const pageHeight = Utils.env.getPageHeight()
-      this.containerStyle = {width: '750px', height: pageHeight + 'px', backgroundColor:'#ffffff'}
+      this.containerStyle = {width: `${750*3}px`, height: pageHeight + 'px', backgroundColor:'#ffffff'}
 
-      this.$navigator.setNavigationInfo({ navShow: true })
-      this.$navigator.setLeftItem({
-        image: 'https://maimaituiguang.github.io/mm-web/images/empty.jpg'
-      })
-
-      
+      if (Utils.env.isAndroid()) {
+        sms.initSMS()
+      }
     },
     methods: {
-      cardSwitch(type) {
-        switch (type) {
-          case 0: {
-            this.cardType = 3
-            this.title = "密码登录"
-          } break
-          case 1: {
-            this.cardType = 2
-            this.title = "密码登录"
-          } break
-          case 2:
-          case 3: {
-            this.cardType = 1
-            this.title = "切换到注册"
-          } break
-        }
+      cardSwitch(page) {
+        const dist = page * 750
+        animation.transition(this.$refs[`card-container`], {
+          styles: {
+            transform: `translateX(${-dist}px)`
+          },
+          duration: 0.00001,
+          timingFunction: 'ease',
+          needLayout: false,
+          delay: 0
+        })
       }
     }
   }
@@ -63,25 +55,8 @@
 
 <style scoped>
   .container {
-    align-items: center;
-    background-color: #ffffff;
-  }
-  .switch-scope {
-    align-items: center;
-    width: 750px;
     flex-direction: row;
-    justify-content: space-between;
-  }
-  .left-btn {
-    font-size: 30px; 
-    color: #4BB93B; 
-    padding: 40px; 
-    margin-left: 20px;
-  }
-  .right-btn {
-    font-size: 26px; 
-    padding: 40px; 
-    color: #444; 
-    margin-right: 20px;
+    background-color: #ffffff;
+    padding-top: 88px;
   }
 </style>

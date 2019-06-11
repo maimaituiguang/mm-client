@@ -1,18 +1,18 @@
 <template>
-<div class="container">
+<div class="register-page">
   <text style="font-size: 45px;">手机号注册</text>
   <div class="xieyi">
-    <text style="color: #999; font-size: 22px;">{{title}}表示同意 </text>
+    <text style="color: #999; font-size: 22px;">注册表示同意 </text>
     <text style="color: #4BB93B; font-size: 22px;" @click="agreementClicked">麦麦推广协议</text>
   </div>
   <div style="align-items: flex-end; width: 750px;">
-    <wxc-cell v-if="!type" class="cell" :has-bottom-border="true">
+    <wxc-cell class="cell" :has-bottom-border="true">
       <text class="cell-label" slot="label">昵称</text>
       <input class="cell-title" slot="title" placeholder="例如：陈峰" @input="(e)=>{this.nick = e.value}" />
     </wxc-cell>
     <wxc-cell class="cell" :has-bottom-border="true">
       <text class="cell-label" slot="label">手机号</text>
-      <input class="cell-title" max-length=11 slot="title" placeholder="请填写手机号码" type="number" @input="(e)=>{this.phone = e.value}" @change="phoneChanged" />
+      <input class="cell-title" max-length=11 slot="title" placeholder="请填写手机号码" type="number" @input="(e)=>{this.phone = e.value}" />
       <text v-if="phone.length == 11" class="cell-code" :style="codeStyle" slot="value" @click="fetchCode">{{codeText}}</text>
     </wxc-cell>
     <wxc-cell class="cell" :has-bottom-border="true">
@@ -25,10 +25,13 @@
     </wxc-cell>
   </div>
   <wxc-button :btnStyle="btnStyle" 
-              :text="title" 
-              :disabled="!(this.nick!='' && this.phone!='' && this.code!='' && this.password.length >= 6)" 
+              text="注册" 
+              :disabled="!(this.nick!='' && this.phone != '' && this.code!='' && this.password.length >= 6)" 
               @wxcButtonClicked="submit">
               </wxc-button>
+  <div class="switch-scope">
+    <text class="left-btn" @click="cardSwitch">切换到密码登录</text>
+  </div>
 </div>
 </template>
 <script>
@@ -41,10 +44,10 @@
       return {
         btnStyle: {
           backgroundColor:'#4BB93B', 
-          width: 630+'px', 
-          height: 80+'px',
-          fontSize: 32+'px',
-          marginTop: 40+'px'
+          width: '630px', 
+          height: '80px',
+          fontSize: '32px',
+          marginTop: '40px'
         },
         title: '注册',
         password: '',
@@ -52,23 +55,15 @@
         phone: '',
         code: '',
         codeText: '获取验证码',
-        isTimering: false,
-        timer: 30,
-        interval: ''
-      }
-    },
-    created () {
-      if (Utils.env.isAndroid()) {
-        sms.initSMS()
-      }
-    },
-    deforeDestroy () {
-      if (Utils.env.isAndroid()) {
-        sms.unregisterEventHandler()
+        isTimering: false
       }
     },
     methods: {
       submit () {
+        if (this.nick == '' || this.phone == '' || this.password.length < 6) {
+          return
+        }
+
         this.$notice.loading.show()
         const self = this
         sms.checkCode(this.code, this.phone, function(resData){
@@ -92,20 +87,18 @@
           }).then(resData => {
             self.$notice.loading.hide()
             if (resData.success == '1') {
-              self.$notice.toast({ message: self.title+'成功' })
-              self.$storage.set('account', resData.data).then(resData => {
-                self.$router.back({type:'PRESENT'})
-                setTimeout(() => {
+              self.$notice.toast({ message: '注册成功' })
+              setTimeout(() => {
+                self.$storage.set('account', resData.data).then(resData => {
                   self.$event.emit('reloadEntry')
-                }, 300);
-              })
-              
+                })
+              }, 100)
               return
             }
-            self.$notice.toast({ message: self.title+'失败, 请重试' })  
+            self.$notice.toast({ message: '注册失败, 请重试' })  
           }, error => {
             self.$notice.loading.hide()
-            self.$notice.toast({ message: self.title+'失败' })
+            self.$notice.toast({ message: '注册失败' })
           })
         })
       },
@@ -120,24 +113,24 @@
         sms.getCode(this.phone, function (resData) {
           self.$notice.loading.hide()
           if (resData == 1) {
-            self.interval = setInterval(function(){
-              self.runTimerCode()
-            },1000)
+            self.runTimerCode(30)
           } else {
             self.$notice.toast({message: '发送失败，请重试'})
             self.isTimering = false
           }
         })
       },
-      runTimerCode () {
-        this.codeText = this.timer + ' 秒后重试'
-        this.timer -= 1
-        if  (this.timer == -1) {
+      runTimerCode (count) {
+        this.codeText = count + ' 秒后重试'
+        count -= 1
+        if  (count == -1) {
           this.isTimering = false
-          clearInterval(this.interval)
-          this.timer = 0
           this.codeText = '获取验证码'
+          return
         }
+        setTimeout(() => {
+          this.runTimerCode(count)
+        }, 1000)
       },
 
       agreementClicked () {
@@ -146,15 +139,20 @@
           title: '协议',
           navShow: true
         })
+      },
+
+      cardSwitch() {
+        this.$emit('switchToCard', 0)
       }
     }
   }
 </script>
 
 <style scoped>
-  .container {
+  .register-page {
     align-items: center;
     background-color: #ffffff;
+    width: 750px;
   }
   .user-avator {
     width: 130px;
@@ -186,6 +184,18 @@
     width: 750px;
     margin-bottom: 20px;
     padding: 20px;
+  }
+  .switch-scope {
+    align-items: center;
+    width: 750px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .left-btn {
+    font-size: 30px; 
+    color: #4BB93B; 
+    padding: 40px; 
+    margin-left: 20px;
   }
   
 </style>
