@@ -97,9 +97,8 @@ export default {
     },
 
     onClikedHeader () {
-      // iOS 'https://www.qimai.cn/app/baseinfo/appid/'+this.data.detail.appId+'/country/cn'
       this.$router.toWebView({
-        url: 'https://www.qimai.cn/andapp/baseinfo/appid/'+this.data.detail.appId,
+        url: this.data.pageUrl,
         title: this.data.detail.appName,
         navShow: true
       })

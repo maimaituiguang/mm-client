@@ -63,8 +63,8 @@
         }).then(resData => {
           self.$notice.loading.hide()
           if (resData.success == '1') {
-            self.$notice.toast({ message: '登录成功' })
             setTimeout(() => {
+              self.$notice.toast({ message: '登录成功' })
               self.$storage.set('account', resData.data).then(resData => {
                 self.$event.emit('reloadEntry')
               })  

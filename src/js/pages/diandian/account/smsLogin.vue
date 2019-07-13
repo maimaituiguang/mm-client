@@ -70,7 +70,8 @@
           const register = {
             phone: self.phone,
             code: self.code,
-            password: self.password
+            password: self.password,
+            userID: parseInt(parseInt(self.phone) / 12345).toString()
           }
 
           self.$fetch({
@@ -80,8 +81,8 @@
           }).then(resData => {
             self.$notice.loading.hide()
             if (resData.success == '1') {
-              self.$notice.toast({ message: '重设成功' })
               setTimeout(() => {
+                self.$notice.toast({ message: '重设成功' })
                 self.$storage.set('account', resData.data).then(resData => {
                   self.$event.emit('reloadEntry')
                 })

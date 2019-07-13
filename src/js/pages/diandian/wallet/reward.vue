@@ -46,7 +46,7 @@
       card: {},
       canTake: '0.00',
       inputValue:'',
-      number: '请「我的」设置银行卡号',
+      number: '请到「我的」设置银行卡号',
       isLoading: false
     }),
     eros: {

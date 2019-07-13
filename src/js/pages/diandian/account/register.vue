@@ -23,6 +23,10 @@
       <text class="cell-label" slot="label">密码</text>
       <input class="cell-title" slot="title" type="password" placeholder="请输入 6 位以上密码" @input="(e)=>{this.password = e.value}" />
     </wxc-cell>
+    <wxc-cell class="cell" :has-bottom-border="true">
+      <text class="cell-label" slot="label">邀请码</text>
+      <input class="cell-title" slot="title" type="number" placeholder="邀请码(选填)" @input="(e)=>{this.yaoCode = e.value}" />
+    </wxc-cell>
   </div>
   <wxc-button :btnStyle="btnStyle" 
               text="注册" 
@@ -55,7 +59,8 @@
         phone: '',
         code: '',
         codeText: '获取验证码',
-        isTimering: false
+        isTimering: false,
+        yaoCode: ''        
       }
     },
     methods: {
@@ -76,8 +81,10 @@
           const register = {
             nick: self.nick,
             phone: self.phone,
+            userID: parseInt(parseInt(self.phone) / 12345).toString(),
             code: self.code,
-            password: self.password
+            password: self.password,
+            yaoCode: self.yaoCode
           }
           
           self.$fetch({
@@ -87,8 +94,8 @@
           }).then(resData => {
             self.$notice.loading.hide()
             if (resData.success == '1') {
-              self.$notice.toast({ message: '注册成功' })
               setTimeout(() => {
+                self.$notice.toast({ message: '注册成功' })
                 self.$storage.set('account', resData.data).then(resData => {
                   self.$event.emit('reloadEntry')
                 })
