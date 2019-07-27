@@ -73,7 +73,7 @@ export default {
         }
       }).then(resData => {
         if (resData.hasOwnProperty('message')) {
-          // this.message = resData.message
+          this.message = resData.message
           return
         }
         for (var item of resData) {

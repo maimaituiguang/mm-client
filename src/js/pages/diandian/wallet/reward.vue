@@ -85,7 +85,7 @@
         this.inputValue = e.value
       },
       reward () {
-        if (!(this.inputValue > 0 && this.inputValue <= parseFloat(this.canTake) && !this.isLoading)) {
+        if (!(parseFloat(this.inputValue) > 0 && parseFloat(this.inputValue) <= parseFloat(this.canTake) && this.isLoading == false)) {
           return
         }
 

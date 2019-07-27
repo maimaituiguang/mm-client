@@ -71,6 +71,12 @@
             }, 100)
             return
           }
+          
+          if (resData.hasOwnProperty("data")) {
+            self.$notice.toast({ message: resData.data })    
+            return
+          }
+          
           self.$notice.toast({ message: '账号或密码错误' })  
         }, error => {
           self.$notice.loading.hide()

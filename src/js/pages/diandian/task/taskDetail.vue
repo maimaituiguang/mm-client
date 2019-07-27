@@ -104,7 +104,7 @@ export default {
       })
     },
     wxcButtonClicked () {
-      if (this.isLoading) {
+      if (this.isLoading == true) {
         return
       }
 

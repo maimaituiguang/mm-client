@@ -16,15 +16,19 @@
 export default {
   components: {},
   data: () => ({
-    urls: [
-      'https://maimaituiguang.github.io/mm-web/images/banner1.png', 
-      'https://maimaituiguang.github.io/mm-web/images/banner2.png'
-    ],
+    urls: [],
     loading: true
   }),
   created: function () {
     const stream = weex.requireModule('stream') || {}
     const modal = weex.requireModule('modal') || {}
+
+    this.$fetch({
+      method: 'GET',
+      name: 'task.banner'
+    }).then(resData => {
+      this.urls = resData.data
+    }, error => {})
   },
   methods: {
     onLoad: function (e) {

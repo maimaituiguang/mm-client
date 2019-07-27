@@ -129,7 +129,7 @@ export default {
       }).then(resData => {
         this.$refs['list'].refreshEnd()
         if (resData.success == '1') {
-          if (resData.data.hasOwnProperty("phone") == false) {
+          if (resData.data.hasOwnProperty("phone") == false || resData.data.account_status != 0) {
             this.logout()
             return
           } 
