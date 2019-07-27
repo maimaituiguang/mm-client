@@ -73,7 +73,13 @@
           }
           
           if (resData.hasOwnProperty("data")) {
-            self.$notice.toast({ message: resData.data })    
+            // self.$notice.toast({ message: resData.data }) 
+            this.$notice.alert({
+              title: '提示',
+              message: resData.data,
+              okTitle: '确认',
+              callback() {} 
+            })   
             return
           }
           
