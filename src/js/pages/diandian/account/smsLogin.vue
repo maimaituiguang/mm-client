@@ -70,8 +70,7 @@
           const register = {
             phone: self.phone,
             code: self.code,
-            password: self.password,
-            userID: parseInt(parseInt(self.phone) / 12345).toString()
+            password: self.password
           }
 
           self.$fetch({

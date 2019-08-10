@@ -23,9 +23,13 @@
         containerStyle: {}
       }
     },
-    deforeDestroy () {
-      if (Utils.env.isAndroid()) {
-        sms.unregisterEventHandler()
+    eros: {
+      beforeDisappear (options) {
+        if (Utils.env.isAndroid()) {
+          sms.unregisterEventHandler()
+        }
+        
+        this.$notice.loading.hide()
       }
     },
     created () {

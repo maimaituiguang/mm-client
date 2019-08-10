@@ -47,6 +47,10 @@ export default {
     'mine.card': {
         title: '银行卡',
         url: '/pages/diandian/mine/card.js'
+    },
+    'mine.switch': {
+        title: '账号管理',
+        url: '/pages/diandian/mine/subAccount.js'
     }
 
 

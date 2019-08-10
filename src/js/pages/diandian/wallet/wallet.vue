@@ -60,8 +60,8 @@ export default {
     })
     this.$event.on('updateUserInfo', params => {
       this.setUserInfo(params)
+      this.userID = params.user_id
     })
-    this.userID = Tools.userID()
   },
   methods: {
     onrefresh () {

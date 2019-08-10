@@ -58,12 +58,11 @@
                   :has-bottom-border="true">
         </wxc-cell>
       </cell>
-      <cell class="cell-temp-line"></cell>
       <cell>
         <wxc-cell label="银行卡"
                   :has-arrow="true"
                   @wxcCellClicked="(e)=>{this.$router.open({name:'mine.card', params: card})}"
-                  :has-top-border="true"
+                  :has-top-border="false"
                   :has-bottom-border="true">
           <text slot="title">{{ card.hasOwnProperty('number') ? card.number : '点击设置银行卡号' }}</text>
         </wxc-cell>
@@ -72,15 +71,27 @@
       <cell>
         <wxc-cell label="客服 QQ"
                   :has-arrow="false"
-                  :has-top-border="false"
+                  :has-top-border="true"
                   :has-bottom-border="true">
           <text slot="title">2582985333</text>
         </wxc-cell>
       </cell>
-      <cell style="padding: 40px; padding-bottom: 100px;">
-        <wxc-button :btnStyle="{backgroundColor: '#4BB93B', height: '80px', width: '670px'}"
-                    text="退出登录" 
-                    @wxcButtonClicked="logout"></wxc-button>
+      <cell class="cell-temp-line"></cell>
+      <cell>
+        <wxc-cell :has-arrow="false"
+                  @wxcCellClicked="(e) => {this.$router.open({ name:'mine.switch'})}"
+                  :has-top-border="true"
+                  :has-bottom-border="true">
+          <text slot="title" style="text-align: center;">账号管理</text>
+        </wxc-cell>
+      </cell>
+      <cell style="padding-bottom: 60px;">
+        <wxc-cell :has-arrow="false"
+                  @wxcCellClicked="logout"
+                  :has-top-border="false"
+                  :has-bottom-border="true">
+          <text slot="title" style="text-align: center;">退出登录</text>
+        </wxc-cell>
       </cell>
     </list>
   </div>
@@ -155,16 +166,16 @@ export default {
     },
 
     bindInfo (resData) {
-        this.nick = resData.nick
-        this.roleName = resData.role_name
-        this.phone = resData.phone
-        this.role = resData.role
-        this.reward = resData.reward
-        if (resData.hasOwnProperty("card")) {
-          this.card = resData.card
-        } 
-        this.$event.emit('updateUserInfo', resData)
-        this.userID = Tools.userID()
+      this.nick = resData.nick
+      this.roleName = resData.role_name
+      this.phone = resData.phone
+      this.role = resData.role
+      this.reward = resData.reward
+      this.userID = resData.user_id
+      if (resData.hasOwnProperty("card")) {
+        this.card = resData.card
+      } 
+      this.$event.emit('updateUserInfo', resData)
     },
 
     agreementClicked () {

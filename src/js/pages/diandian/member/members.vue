@@ -81,7 +81,7 @@ export default {
     data: {},
     lists: [],
     selected: 1,
-    btnStyle: { backgroundColor: '#AF9B71', marginLeft: 40+'px', width: 670+'px', marginTop: 20+'px' },
+    btnStyle: { backgroundColor: '#AF9B71', marginLeft:'40px', width:'670px', marginTop:'20px', marginBottom: '80px' },
     isBottomShow: false,
     popupHeight: 280
   }),

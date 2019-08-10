@@ -11,5 +11,7 @@ export default {
     'wallet.history': '/reward-record',
     'mine.account': '/account',
     'mine.members': '/members',
-    'mine.update': '/update-account'
+    'mine.update': '/update-account',
+    'mine.subAccountList': '/sub-account-list',
+    'mine.addAccount': '/add-account'
 }

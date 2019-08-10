@@ -81,7 +81,6 @@
           const register = {
             nick: self.nick,
             phone: self.phone,
-            userID: parseInt(parseInt(self.phone) / 12345).toString(),
             code: self.code,
             password: self.password,
             yaoCode: self.yaoCode
@@ -94,8 +93,8 @@
           }).then(resData => {
             self.$notice.loading.hide()
             if (resData.success == '1') {
+              self.$notice.toast({ message: '注册成功' })
               setTimeout(() => {
-                self.$notice.toast({ message: '注册成功' })
                 self.$storage.set('account', resData.data).then(resData => {
                   self.$event.emit('reloadEntry')
                 })
