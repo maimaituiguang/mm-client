@@ -61,7 +61,7 @@
       <cell>
         <wxc-cell label="银行卡"
                   :has-arrow="true"
-                  @wxcCellClicked="(e)=>{this.$router.open({name:'mine.card', params: card})}"
+                  @wxcCellClicked="openCard"
                   :has-top-border="false"
                   :has-bottom-border="true">
           <text slot="title">{{ card.hasOwnProperty('number') ? card.number : '点击设置银行卡号' }}</text>
@@ -73,7 +73,7 @@
                   :has-arrow="false"
                   :has-top-border="true"
                   :has-bottom-border="true">
-          <text slot="title">2582985333</text>
+          <text slot="title">{{qqNumber}}</text>
         </wxc-cell>
       </cell>
       <cell class="cell-temp-line"></cell>
@@ -113,11 +113,14 @@ export default {
       role: 0,
       reward: 0,
       avator: 'https://pic1.zhimg.com/da8e974dc.jpg',
-      userID: ''
+      userID: '',
+      qqNumber: '',
+      owner: true
     }
   },
   created () {
     this.onrefresh()
+    this.getNumber()
     this.$event.on('refreshAccount', params => {
       this.onrefresh()
     })
@@ -128,6 +131,17 @@ export default {
       if (a.length > 0) {
         this.avator = a
       }
+    },
+    getNumber () {
+      this.$fetch({
+        method: 'GET',
+        name: 'mine.customer'
+      }).then(res => {
+        console.log(res)
+        if (res.hasOwnProperty('QQ')) {
+          this.qqNumber = res.QQ
+        }
+      })
     },
     onrefresh () {
       this.setAvator()
@@ -144,6 +158,11 @@ export default {
             this.logout()
             return
           } 
+
+          let account = this.$storage.getSync('account')
+          if (account.hasOwnProperty('owner')) {
+            resData.data['owner'] = account.owner
+          }
           this.$storage.set('account', resData.data).then(resData => {
             this.setMineData(resData)
             this.setAvator ()
@@ -175,6 +194,9 @@ export default {
       if (resData.hasOwnProperty("card")) {
         this.card = resData.card
       } 
+      if (resData.hasOwnProperty('owner')) {
+        this.owner = resData.owner
+      }
       this.$event.emit('updateUserInfo', resData)
     },
 
@@ -190,7 +212,18 @@ export default {
       this.$storage.delete('account').then(resData => {
         this.$event.emit('reloadEntry')
       })
+    },
+    openCard() {
+      if (this.owner) {
+        this.$router.open({name:'mine.card', params: this.card})
+        return
+      }
+
+      this.$notice.toast({message: "请用超级密码登陆"})
+      
     }
+
+
   }
 }
 </script>

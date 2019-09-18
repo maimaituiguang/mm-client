@@ -13,5 +13,7 @@ export default {
     'mine.members': '/members',
     'mine.update': '/update-account',
     'mine.subAccountList': '/sub-account-list',
-    'mine.addAccount': '/add-account'
+    'mine.addAccount': '/add-account',
+    'mine.customer': '/customer',
+    'mine.setSubPassword': '/append_sub_password'
 }

@@ -16,8 +16,10 @@
                   :has-top-border="false"
                   :has-bottom-border="true">
           <div slot="title" style="">
-            <input ref="appNumber" class="number input" placeholder="输入注册账号" @input="numberOnInput" type="text" />
-            <input ref="appPassword" class="password input" placeholder="输入账号昵称" @input="pwdOnInput" type="text" />
+            <input v-if="isShowSubButton" ref="appNumber" :enabled="false" class="number input" placeholder="输入注册账号" @input="numberOnInput" type="text" :value="number" />
+            <input v-if="isShowSubButton" ref="appPassword" class="password input" placeholder="输入账号昵称" @input="pwdOnInput" type="text" :value="password" />
+            <text v-if="!isShowSubButton" style="font-size: 28; padding-bottom: 10px;">账号：{{number}}</text>
+            <text v-if="!isShowSubButton" style="font-size: 28;">昵称：{{password}}</text>
           </div>
         </wxc-cell> 
       </cell>
@@ -54,7 +56,7 @@
           <text slot="title" style="font-weight: bold; color: #FE802B;">{{ reward }} 元</text>
         </wxc-cell>
       </cell>
-      <cell style="height: 200px; justify-content: center; align-items: center;">
+      <cell v-if="isShowSubButton" style="height: 200px; justify-content: center; align-items: center;">
         <wxc-button text="提交任务"  style="width: 600px; background-color: #FE802B;"
               @wxcButtonClicked="wxcButtonClicked"></wxc-button>
       </cell>
@@ -77,7 +79,8 @@ export default {
       password: '',
       role: 0,
       reward: 0,
-      isLoading: false
+      isLoading: false,
+      isShowSubButton: false
     }
   },
   created () {
@@ -85,6 +88,13 @@ export default {
     this.$router.getParams().then(resData => {
       self.data = resData
       self.endTime = Tools.timeFormat(resData.end_time)
+      if (resData.hasOwnProperty('number')) {
+        self.number = resData.number
+        self.password = resData.password
+
+      } else {
+        self.isShowSubButton = true
+      }
     })
 
     this.account()

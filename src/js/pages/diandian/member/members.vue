@@ -122,6 +122,10 @@ export default {
       }).then(resData => {
         this.$refs['list'].refreshEnd()
         if (resData.success == '1') {
+          let account = this.$storage.getSync('account')
+          if (account.hasOwnProperty('owner')) {
+            resData.data['owner'] = account.owner
+          }
           this.$storage.set('account', resData.data).then(resData => {
             this.role = resData.role
             this.roleName = resData.roleName

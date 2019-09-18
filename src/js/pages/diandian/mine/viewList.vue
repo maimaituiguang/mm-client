@@ -1,6 +1,6 @@
 <template>
   <list :style="{height: listHeight + 'px'}" ref="list" :show-scrollbar="false" :showRefresh="true" @refresh="onrefresh">
-    <cell v-for="item in lists" :key="item.id" style="background-color: #ffffff">
+    <cell v-for="item in lists" :key="item.id" style="background-color: #ffffff" @click="didTapCell(item)">
       <TaskCell :item="item" style="margin-left: 40px; margin-right: 40px;" />
     </cell>
   </list>
@@ -62,6 +62,9 @@ export default {
         this.$refs['list'].loadMoreEnd()
       })
       return list
+    },
+    didTapCell (item) {
+      this.$router.open({ name: 'task.detail', params: item})
     }
   }
 }
